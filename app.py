@@ -8,6 +8,9 @@ from data.questions import get_questions_by_block
 # Essa função foi criada na Etapa 5, dentro de data/subquestions.py.
 from data.subquestions import get_active_subquestions
 
+# Importa a função que valida se todas as perguntas obrigatórias foram respondidas.
+from utils.validation import validate_required_answers
+
 
 # -------------------------------------------------------------------
 # Configuração geral da página
@@ -314,6 +317,69 @@ for subquestion_id in list(st.session_state.subanswers.keys()):
     if subquestion_id not in all_active_subquestion_ids:
         del st.session_state.subanswers[subquestion_id]
 
+
+# -------------------------------------------------------------------
+# Validação do preenchimento
+# -------------------------------------------------------------------
+#
+# A validação verifica:
+# 1. se todas as perguntas principais foram respondidas;
+# 2. se todas as subperguntas ativadas foram respondidas;
+# 3. se o questionário já está pronto para permitir o processamento futuro.
+
+validation_result = validate_required_answers(
+    answers=st.session_state.answers,
+    subanswers=st.session_state.subanswers,
+    active_subquestion_ids=all_active_subquestion_ids
+)
+
+# -------------------------------------------------------------------
+# Seção de validação do questionário
+# -------------------------------------------------------------------
+#
+# Esta seção ainda não gera resultado.
+# Ela apenas informa se o questionário está completo.
+
+st.header("Validação do preenchimento")
+
+st.write(
+    "Use esta verificação para conferir se todas as perguntas obrigatórias "
+    "e subperguntas ativadas foram respondidas."
+)
+
+if st.button("Verificar preenchimento"):
+    if validation_result["is_valid"]:
+        st.success(
+            "Questionário completo. Nas próximas etapas, este estado permitirá "
+            "gerar o perfil preliminar e seguir com a lógica da árvore."
+        )
+    else:
+        st.error("Ainda existem perguntas obrigatórias sem resposta.")
+
+        if validation_result["missing_questions"]:
+            st.subheader("Perguntas principais pendentes")
+
+            for question in validation_result["missing_questions"]:
+                st.write(
+                    f"- **{question['id']}** — {question['text']} "
+                    f"({question['block']})"
+                )
+
+        if validation_result["missing_subquestions"]:
+            st.subheader("Subperguntas condicionais pendentes")
+
+            for subquestion in validation_result["missing_subquestions"]:
+                st.write(
+                    f"- **{subquestion['id']}** — {subquestion['text']} "
+                    f"(origem: {subquestion['parent_question_id']})"
+                )
+
+# Mensagem informativa fixa, sem bloquear nada ainda.
+# O bloqueio real do botão de resultado será usado nas próximas etapas.
+if validation_result["is_valid"]:
+    st.info("Status atual: o questionário está completo.")
+else:
+    st.info("Status atual: o questionário ainda possui pendências.")
 
 # -------------------------------------------------------------------
 # Visualização temporária das respostas
