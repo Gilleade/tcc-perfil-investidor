@@ -1,9 +1,6 @@
 # Importa o Streamlit, biblioteca usada para criar a interface web local.
 import streamlit as st
 
-# Importa a renderização dos blocos de perguntas.
-from ui.question_blocks import render_question_block
-
 # Importa a função de validação das respostas obrigatórias.
 from utils.validation import validate_required_answers
 
@@ -13,11 +10,13 @@ from ui.result_actions import render_result_generation
 # Importa a seção de resultado da interface.
 from ui.result_view import render_result_section
 
+# Importa a montagem completa dos blocos do questionário.
+from ui.questionnaire import render_questionnaire
+
 # Importa elementos visuais gerais da aplicação.
 from ui.layout import (
     apply_custom_styles,
     render_header,
-    render_block_intro,
     render_completion_status,
 )
 
@@ -61,33 +60,10 @@ render_header()
 
 
 # -------------------------------------------------------------------
-# Renderização dos blocos principais
+# Renderização do questionário
 # -------------------------------------------------------------------
-#
-# Esta lista será usada para controlar quais subperguntas estão ativas.
 
-all_active_subquestion_ids = []
-
-
-# Bloco 1 — Objetivos e tolerância ao risco
-st.header("Bloco 1 — Objetivos e tolerância ao risco")
-render_block_intro("B1")
-
-all_active_subquestion_ids.extend(render_question_block("B1"))
-
-
-# Bloco 2 — Compatibilidade financeira
-st.header("Bloco 2 — Compatibilidade financeira")
-render_block_intro("B2")
-
-all_active_subquestion_ids.extend(render_question_block("B2"))
-
-
-# Bloco 3 — Conhecimento e experiência
-st.header("Bloco 3 — Conhecimento e experiência")
-render_block_intro("B3")
-
-all_active_subquestion_ids.extend(render_question_block("B3"))
+all_active_subquestion_ids = render_questionnaire()
 
 
 # -------------------------------------------------------------------
