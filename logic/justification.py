@@ -4,6 +4,20 @@
 # Ele recebe o resultado já consolidado pela função consolidate_final_profile()
 # e transforma os registros lógicos em texto claro e rastreável.
 
+def _format_levels(quantity):
+    """
+    Formata corretamente a palavra nível no singular ou plural.
+
+    Exemplos:
+    - 1 -> "1 nível"
+    - 2 -> "2 níveis"
+    """
+
+    if quantity == 1:
+        return "1 nível"
+
+    return f"{quantity} níveis"
+
 
 def _get_result_section(consolidated_result, section_name):
     """
@@ -79,7 +93,7 @@ def _build_preliminary_section(preliminary_result):
 
     lines = []
 
-    lines.append("1. Perfil preliminar")
+    lines.append("### 1. Perfil preliminar")
     lines.append(
         f"O perfil preliminar identificado foi **{profile}**. "
         "Essa primeira classificação considera a finalidade do investimento, "
@@ -125,7 +139,7 @@ def _build_financial_section(financial_result):
 
     lines = []
 
-    lines.append("2. Compatibilidade financeira")
+    lines.append("### 2. Compatibilidade financeira")
 
     if reduction_steps == 0:
         lines.append(
@@ -135,7 +149,7 @@ def _build_financial_section(financial_result):
     else:
         lines.append(
             f"A análise de compatibilidade financeira {_format_profile_change(input_profile, output_profile)}, "
-            f"com redução de {reduction_steps} nível(is). Motivo: {reduction_reason}"
+            f"com redução de {_format_levels(reduction_steps)}. Motivo: {reduction_reason}"
         )
 
     lines.append("Travas financeiras fortes identificadas:")
@@ -191,7 +205,7 @@ def _build_knowledge_section(knowledge_result):
 
     lines = []
 
-    lines.append("3. Conhecimento e experiência")
+    lines.append("### 3. Conhecimento e experiência")
 
     if reduction_steps == 0:
         lines.append(
@@ -201,7 +215,7 @@ def _build_knowledge_section(knowledge_result):
     else:
         lines.append(
             f"O refinamento por conhecimento e experiência {_format_profile_change(input_profile, output_profile)}, "
-            f"com redução de {reduction_steps} nível(is). Motivo: {reduction_reason}"
+            f"com redução de {_format_levels(reduction_steps)}. Motivo: {reduction_reason}"
         )
 
     lines.append("Limitações identificadas:")
@@ -266,7 +280,7 @@ def _build_final_section(consolidated_result):
 
     lines = []
 
-    lines.append("4. Resultado final")
+    lines.append("### 4. Resultado final")
     lines.append(
         f"O perfil preliminar foi **{preliminary_profile}**. "
         f"Após a compatibilidade financeira, o perfil passou a **{financial_profile}**. "
@@ -275,7 +289,7 @@ def _build_final_section(consolidated_result):
 
     if total_reduction_steps > 0:
         lines.append(
-            f"A classificação sofreu redução total de {total_reduction_steps} nível(is) ao longo da árvore, "
+            f"A classificação sofreu redução total de {_format_levels(total_reduction_steps)} ao longo da árvore, "
             "em razão de travas, moderações ou limitações identificadas."
         )
     else:

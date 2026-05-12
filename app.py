@@ -1,15 +1,20 @@
 # Importa o Streamlit, biblioteca usada para criar a interface web local.
 import streamlit as st
 
-# Importa as perguntas principais cadastradas na Etapa 4.
+# Importa as perguntas principais cadastradas no sistema.
 from data.questions import get_questions_by_block
 
 # Importa a função que identifica quais subperguntas devem ser ativadas.
-# Essa função foi criada na Etapa 5, dentro de data/subquestions.py.
 from data.subquestions import get_active_subquestions
 
-# Importa a função que valida se todas as perguntas obrigatórias foram respondidas.
+# Importa a função de validação das respostas obrigatórias.
 from utils.validation import validate_required_answers
+
+# Importa a função que executa toda a sequência lógica da árvore.
+from logic.final_consolidation import consolidate_final_profile
+
+# Importa a função que gera a justificativa textual do resultado.
+from logic.justification import generate_justification
 
 
 # -------------------------------------------------------------------
@@ -17,7 +22,7 @@ from utils.validation import validate_required_answers
 # -------------------------------------------------------------------
 #
 # Define título da aba do navegador, ícone e layout da aplicação.
-# Esta configuração precisa aparecer antes dos demais elementos visuais do Streamlit.
+# Esta configuração precisa aparecer antes dos demais elementos visuais.
 
 st.set_page_config(
     page_title="Classificação do Perfil do Investidor",
@@ -30,43 +35,102 @@ st.set_page_config(
 # Inicialização do estado da sessão
 # -------------------------------------------------------------------
 #
-# O Streamlit recarrega o script a cada interação do usuário.
-# Por isso, usamos st.session_state para manter respostas, subrespostas
-# e controles internos entre um clique e outro.
+# O Streamlit recarrega o script a cada interação.
+# Por isso, usamos st.session_state para guardar respostas,
+# resultado gerado e controles temporários.
 
 if "answers" not in st.session_state:
-    # Guarda as respostas das 9 perguntas principais.
+    # Guarda respostas das perguntas principais.
     # Exemplo: {"P1": 2, "P2": 3}
     st.session_state.answers = {}
 
 if "subanswers" not in st.session_state:
-    # Guarda as respostas das subperguntas condicionais.
+    # Guarda respostas das subperguntas condicionais.
     # Exemplo: {"4A": 1, "4B": 2}
     st.session_state.subanswers = {}
 
 if "reset_counter" not in st.session_state:
-    # Contador usado para recriar os campos de resposta quando limpamos o formulário.
-    # Isso evita que o Streamlit mantenha marcações antigas nos st.radio.
+    # Contador usado para recriar campos radio ao limpar o formulário.
     st.session_state.reset_counter = 0
+
+if "classification_result" not in st.session_state:
+    # Guarda o resultado consolidado da árvore quando o usuário gera o resultado.
+    st.session_state.classification_result = None
+
+if "justification_result" not in st.session_state:
+    # Guarda a justificativa textual gerada a partir do resultado consolidado.
+    st.session_state.justification_result = None
+
+if "result_signature" not in st.session_state:
+    # Guarda uma assinatura das respostas usadas para gerar o resultado.
+    # Isso ajuda a evitar mostrar resultado antigo depois que o usuário altera respostas.
+    st.session_state.result_signature = None
+
+
+# -------------------------------------------------------------------
+# Funções auxiliares de sessão
+# -------------------------------------------------------------------
+
+def get_answers_signature():
+    """
+    Cria uma assinatura simples das respostas atuais.
+
+    Essa assinatura é usada para saber se o usuário alterou alguma resposta
+    depois de gerar o resultado.
+
+    Se as respostas mudarem, o resultado antigo é descartado para evitar
+    inconsistência entre formulário e classificação exibida.
+    """
+
+    main_answers = sorted(st.session_state.answers.items())
+    conditional_answers = sorted(st.session_state.subanswers.items())
+
+    return repr((main_answers, conditional_answers))
+
+
+def clear_simulation():
+    """
+    Limpa a simulação atual.
+
+    Esta função remove:
+    - respostas principais;
+    - respostas condicionais;
+    - resultado consolidado;
+    - justificativa textual;
+    - seleção visual dos campos radio.
+
+    Depois de chamar esta função, a tela deve ser recarregada com st.rerun().
+    """
+
+    st.session_state.answers = {}
+    st.session_state.subanswers = {}
+    st.session_state.classification_result = None
+    st.session_state.justification_result = None
+    st.session_state.result_signature = None
+
+    # Incrementa o contador para recriar os campos de seleção.
+    st.session_state.reset_counter += 1
+
+    # Remove chaves antigas dos radios principais e condicionais.
+    for key in list(st.session_state.keys()):
+        if key.startswith("radio_"):
+            del st.session_state[key]
 
 
 # -------------------------------------------------------------------
 # Função auxiliar para descobrir o índice selecionado
 # -------------------------------------------------------------------
 #
-# O st.radio precisa receber um índice numérico.
-# Como nossas respostas são salvas pelo id da alternativa, esta função
-# converte o id salvo para o índice correspondente na lista de opções.
+# O st.radio trabalha com índice numérico.
+# Como salvamos respostas pelo id da alternativa, esta função converte
+# o id salvo para o índice correto na lista de opções.
 
 def get_selected_index(radio_options, current_answer_id):
     """
     Retorna o índice da alternativa previamente selecionada.
 
-    Parâmetros:
-    - radio_options: lista de opções exibidas no st.radio.
-    - current_answer_id: id da alternativa salva no session_state.
-
-    Se ainda não existir resposta, retorna 0, que representa a opção vazia.
+    Se ainda não houver resposta, retorna 0, que representa
+    a opção vazia "Selecione uma alternativa".
     """
 
     if current_answer_id is None:
@@ -82,16 +146,13 @@ def get_selected_index(radio_options, current_answer_id):
 # -------------------------------------------------------------------
 # Função auxiliar para exibir uma pergunta principal
 # -------------------------------------------------------------------
-#
-# Esta função recebe uma pergunta cadastrada em data/questions.py,
-# exibe suas alternativas e armazena a resposta escolhida.
 
 def render_question(question):
     """
-    Exibe uma pergunta principal na tela e armazena a resposta.
+    Exibe uma pergunta principal e armazena a resposta escolhida.
 
     Retorna:
-    - o id da alternativa selecionada;
+    - id da alternativa selecionada;
     - None, caso nenhuma alternativa tenha sido selecionada.
     """
 
@@ -99,17 +160,16 @@ def render_question(question):
     question_text = question["text"]
     options = question["options"]
 
-    # Adiciona uma opção vazia no início.
-    # Isso impede que a primeira alternativa real já venha marcada automaticamente.
+    # Adiciona opção vazia para evitar seleção automática.
     radio_options = [None] + options
 
-    # Recupera a resposta já salva, se existir.
+    # Recupera resposta salva, se existir.
     current_answer_id = st.session_state.answers.get(question_id)
 
-    # Define qual alternativa deve aparecer selecionada.
+    # Descobre qual alternativa deve aparecer selecionada.
     selected_index = get_selected_index(radio_options, current_answer_id)
 
-    # Exibe a pergunta principal como alternativa única.
+    # Exibe a pergunta principal.
     selected_option = st.radio(
         label=f"{question_id} — {question_text}",
         options=radio_options,
@@ -118,20 +178,19 @@ def render_question(question):
         key=f"radio_{question_id}_{st.session_state.reset_counter}"
     )
 
-    # Se o usuário selecionou uma alternativa real, salvamos o id.
+    # Se uma alternativa real foi selecionada, salva o id.
     if selected_option is not None:
         st.session_state.answers[question_id] = selected_option["id"]
         selected_option_id = selected_option["id"]
 
-    # Se o usuário voltou para a opção vazia, removemos a resposta.
+    # Se voltou para a opção vazia, remove a resposta.
     else:
         if question_id in st.session_state.answers:
             del st.session_state.answers[question_id]
 
         selected_option_id = None
 
-    # Área técnica expansível.
-    # Ela ajuda a verificar se a pergunta está ligada corretamente à modelagem acadêmica.
+    # Detalhes técnicos úteis para desenvolvimento e rastreabilidade.
     with st.expander("Detalhes técnicos desta pergunta"):
         st.write(f"**Eixo:** {question['axis']}")
         st.write(f"**Critério:** {question['criterion']}")
@@ -144,33 +203,29 @@ def render_question(question):
 # -------------------------------------------------------------------
 # Função auxiliar para exibir uma subpergunta condicional
 # -------------------------------------------------------------------
-#
-# Esta função recebe uma subpergunta ativada e exibe suas alternativas.
-# As respostas das subperguntas são guardadas separadamente em subanswers.
 
 def render_subquestion(subquestion):
     """
-    Exibe uma subpergunta condicional e armazena a resposta.
+    Exibe uma subpergunta condicional e armazena sua resposta.
 
-    A subpergunta só chega até esta função se já tiver sido ativada
-    pelo gatilho definido em data/subquestions.py.
+    A subpergunta só chega aqui quando foi ativada pelo gatilho
+    definido no arquivo data/subquestions.py.
     """
 
     subquestion_id = subquestion["id"]
     subquestion_text = subquestion["text"]
     options = subquestion["options"]
 
-    # Opção vazia inicial para evitar marcação automática.
+    # Opção vazia para evitar marcação automática.
     radio_options = [None] + options
 
-    # Recupera resposta anterior da subpergunta, se existir.
+    # Recupera resposta anterior, se existir.
     current_answer_id = st.session_state.subanswers.get(subquestion_id)
 
-    # Descobre o índice que deve aparecer selecionado.
+    # Define índice selecionado.
     selected_index = get_selected_index(radio_options, current_answer_id)
 
-    # Destaque visual para mostrar que não é pergunta principal,
-    # mas sim uma pergunta complementar ativada por condição.
+    # Indica visualmente que é uma subpergunta.
     st.markdown(f"**Subpergunta {subquestion_id}**")
 
     selected_option = st.radio(
@@ -181,11 +236,9 @@ def render_subquestion(subquestion):
         key=f"radio_sub_{subquestion_id}_{st.session_state.reset_counter}"
     )
 
-    # Se o usuário respondeu, salvamos a subresposta.
+    # Salva ou remove a resposta da subpergunta.
     if selected_option is not None:
         st.session_state.subanswers[subquestion_id] = selected_option["id"]
-
-    # Se voltou para a opção vazia, removemos a subresposta.
     else:
         if subquestion_id in st.session_state.subanswers:
             del st.session_state.subanswers[subquestion_id]
@@ -200,35 +253,29 @@ def render_subquestion(subquestion):
 # -------------------------------------------------------------------
 # Função para exibir um bloco de perguntas
 # -------------------------------------------------------------------
-#
-# Esta função exibe as perguntas principais de um bloco e,
-# logo abaixo de cada uma, exibe as subperguntas ativadas.
 
 def render_question_block(block_id):
     """
-    Exibe todas as perguntas principais de um bloco.
+    Exibe perguntas principais de um bloco e suas subperguntas ativadas.
 
-    Para cada pergunta:
-    1. exibe a pergunta principal;
-    2. verifica se a resposta ativa subperguntas;
-    3. exibe as subperguntas ativadas;
-    4. retorna os ids das subperguntas ativas.
+    Retorna:
+    - lista com ids das subperguntas que estão ativas.
     """
 
     active_subquestion_ids = []
 
     for question in get_questions_by_block(block_id):
-        # Exibe a pergunta principal e captura a alternativa escolhida.
+        # Exibe a pergunta principal.
         selected_option_id = render_question(question)
 
-        # Se a pergunta principal foi respondida, verificamos subperguntas.
+        # Se a pergunta foi respondida, verifica subperguntas.
         if selected_option_id is not None:
             active_subquestions = get_active_subquestions(
                 question["id"],
                 selected_option_id
             )
 
-            # Exibe cada subpergunta ativada.
+            # Exibe as subperguntas ativadas.
             for subquestion in active_subquestions:
                 active_subquestion_ids.append(subquestion["id"])
                 render_subquestion(subquestion)
@@ -236,6 +283,123 @@ def render_question_block(block_id):
         st.divider()
 
     return active_subquestion_ids
+
+
+# -------------------------------------------------------------------
+# Funções auxiliares de apresentação do resultado
+# -------------------------------------------------------------------
+
+def render_profile_badge(profile):
+    """
+    Exibe o perfil final com destaque visual.
+
+    A lógica de classificação não está aqui.
+    Esta função apenas melhora a apresentação do resultado.
+    """
+
+    if profile == "Conservador":
+        st.info("Perfil final: Conservador")
+    elif profile == "Moderado":
+        st.success("Perfil final: Moderado")
+    elif profile == "Arrojado":
+        st.warning("Perfil final: Arrojado")
+    else:
+        st.write(f"Perfil final: {profile}")
+
+
+def render_adjustments(adjustments):
+    """
+    Exibe os ajustes realizados após o perfil preliminar.
+
+    Os ajustes vêm da consolidação final e mostram se houve manutenção
+    ou redução por compatibilidade financeira e por conhecimento/experiência.
+    """
+
+    if not adjustments:
+        st.write("Nenhum ajuste registrado.")
+        return
+
+    for adjustment in adjustments:
+        stage = adjustment["stage"]
+        adjustment_type = adjustment["type"]
+        levels = adjustment["levels"]
+        reason = adjustment["reason"]
+        from_profile = adjustment["from_profile"]
+        to_profile = adjustment["to_profile"]
+
+        if adjustment_type == "reducao":
+            level_text = "1 nível" if levels == 1 else f"{levels} níveis"
+
+            st.write(
+                f"- **{stage}**: reduziu de **{from_profile}** para **{to_profile}** "
+                f"({level_text}). Motivo: {reason}"
+            )
+        else:
+            st.write(
+                f"- **{stage}**: manteve **{to_profile}**. Motivo: {reason}"
+            )
+
+
+def render_result_section():
+    """
+    Exibe a tela de resultado quando já existe uma classificação gerada.
+    """
+
+    classification_result = st.session_state.classification_result
+    justification_result = st.session_state.justification_result
+
+    if classification_result is None or justification_result is None:
+        return
+
+    st.divider()
+    st.header("Resultado da classificação")
+
+    final_profile = classification_result["final_profile"]
+    preliminary_profile = classification_result["preliminary_profile"]
+    financial_profile = classification_result["financial_profile"]
+
+    # Destaque principal do perfil final.
+    render_profile_badge(final_profile)
+
+    st.subheader("Resumo da classificação")
+
+    st.write(f"**Perfil preliminar:** {preliminary_profile}")
+    st.write(f"**Após compatibilidade financeira:** {financial_profile}")
+    st.write(f"**Perfil final:** {final_profile}")
+
+    st.write("**Resumo textual:**")
+    st.write(justification_result["summary"])
+
+    st.subheader("Ajustes realizados")
+    render_adjustments(classification_result.get("adjustments", []))
+
+    st.subheader("Travas, bloqueios e inconsistências")
+
+    blocked_profiles = classification_result.get("blocked_profiles", [])
+    inconsistencies = classification_result.get("inconsistencies", [])
+
+    if blocked_profiles:
+        st.write("**Perfis bloqueados por prudência:**")
+        for profile in blocked_profiles:
+            st.write(f"- {profile}")
+    else:
+        st.write("Não houve bloqueio prudencial de perfil.")
+
+    if inconsistencies:
+        st.write("**Inconsistências ou pontos de atenção:**")
+        for item in inconsistencies:
+            st.write(f"- {item}")
+    else:
+        st.write("Não foram registradas inconsistências relevantes.")
+
+    st.subheader("Justificativa textual completa")
+
+    # st.markdown permite exibir o texto com negrito e quebras de linha.
+    st.markdown(justification_result["full_text"])
+
+    if st.button("Nova simulação", key="new_simulation_button"):
+        clear_simulation()
+        st.rerun()
 
 
 # -------------------------------------------------------------------
@@ -255,8 +419,8 @@ st.warning(
 )
 
 st.info(
-    "Nesta etapa, o protótipo exibe as 9 perguntas principais e ativa subperguntas "
-    "condicionais quando a resposta selecionada exige refinamento."
+    "Nesta etapa, o protótipo já permite responder ao questionário, validar o preenchimento "
+    "e gerar uma classificação com justificativa textual."
 )
 
 st.divider()
@@ -266,8 +430,7 @@ st.divider()
 # Renderização dos blocos principais
 # -------------------------------------------------------------------
 #
-# A lista abaixo será usada para controlar quais subperguntas estão ativas.
-# Isso ajuda a limpar respostas antigas de subperguntas que deixaram de aparecer.
+# Esta lista será usada para controlar quais subperguntas estão ativas.
 
 all_active_subquestion_ids = []
 
@@ -277,7 +440,7 @@ st.header("Bloco 1 — Objetivos e tolerância ao risco")
 
 st.write(
     "Este bloco coleta informações sobre finalidade, horizonte temporal e "
-    "tolerância ao risco. Posteriormente, essas respostas formarão o perfil preliminar."
+    "tolerância ao risco. Essas respostas formam o perfil preliminar."
 )
 
 all_active_subquestion_ids.extend(render_question_block("B1"))
@@ -288,8 +451,7 @@ st.header("Bloco 2 — Compatibilidade financeira")
 
 st.write(
     "Este bloco coleta informações sobre necessidade futura de recursos, estabilidade "
-    "de renda e reserva financeira. Posteriormente, essas respostas poderão limitar "
-    "ou ajustar o perfil preliminar."
+    "de renda e reserva financeira. Essas respostas podem limitar ou ajustar o perfil preliminar."
 )
 
 all_active_subquestion_ids.extend(render_question_block("B2"))
@@ -300,7 +462,7 @@ st.header("Bloco 3 — Conhecimento e experiência")
 
 st.write(
     "Este bloco coleta informações sobre familiaridade, experiência prática e formação "
-    "relacionada. Posteriormente, essas respostas serão usadas no refinamento do perfil."
+    "relacionada. Essas respostas refinam a classificação final."
 )
 
 all_active_subquestion_ids.extend(render_question_block("B3"))
@@ -310,8 +472,8 @@ all_active_subquestion_ids.extend(render_question_block("B3"))
 # Limpeza automática de subrespostas inativas
 # -------------------------------------------------------------------
 #
-# Se o usuário mudar uma resposta principal, uma subpergunta pode deixar de aparecer.
-# Nesse caso, a resposta antiga da subpergunta não deve continuar armazenada.
+# Se uma subpergunta deixou de aparecer porque o usuário alterou uma resposta principal,
+# a resposta antiga dessa subpergunta não deve continuar armazenada.
 
 for subquestion_id in list(st.session_state.subanswers.keys()):
     if subquestion_id not in all_active_subquestion_ids:
@@ -323,9 +485,8 @@ for subquestion_id in list(st.session_state.subanswers.keys()):
 # -------------------------------------------------------------------
 #
 # A validação verifica:
-# 1. se todas as perguntas principais foram respondidas;
-# 2. se todas as subperguntas ativadas foram respondidas;
-# 3. se o questionário já está pronto para permitir o processamento futuro.
+# - todas as perguntas principais;
+# - apenas as subperguntas condicionais que estão ativas.
 
 validation_result = validate_required_answers(
     answers=st.session_state.answers,
@@ -333,12 +494,28 @@ validation_result = validate_required_answers(
     active_subquestion_ids=all_active_subquestion_ids
 )
 
+
+# -------------------------------------------------------------------
+# Controle de resultado antigo
+# -------------------------------------------------------------------
+#
+# Se o usuário alterar respostas depois de gerar resultado,
+# o resultado anterior deve ser descartado para evitar inconsistência.
+
+current_signature = get_answers_signature()
+
+if (
+    st.session_state.classification_result is not None
+    and st.session_state.result_signature != current_signature
+):
+    st.session_state.classification_result = None
+    st.session_state.justification_result = None
+    st.session_state.result_signature = None
+
+
 # -------------------------------------------------------------------
 # Seção de validação do questionário
 # -------------------------------------------------------------------
-#
-# Esta seção ainda não gera resultado.
-# Ela apenas informa se o questionário está completo.
 
 st.header("Validação do preenchimento")
 
@@ -350,8 +527,7 @@ st.write(
 if st.button("Verificar preenchimento"):
     if validation_result["is_valid"]:
         st.success(
-            "Questionário completo. Nas próximas etapas, este estado permitirá "
-            "gerar o perfil preliminar e seguir com a lógica da árvore."
+            "Questionário completo. O resultado já pode ser gerado."
         )
     else:
         st.error("Ainda existem perguntas obrigatórias sem resposta.")
@@ -374,20 +550,64 @@ if st.button("Verificar preenchimento"):
                     f"(origem: {subquestion['parent_question_id']})"
                 )
 
-# Mensagem informativa fixa, sem bloquear nada ainda.
-# O bloqueio real do botão de resultado será usado nas próximas etapas.
 if validation_result["is_valid"]:
     st.info("Status atual: o questionário está completo.")
 else:
     st.info("Status atual: o questionário ainda possui pendências.")
 
+
+# -------------------------------------------------------------------
+# Geração do resultado
+# -------------------------------------------------------------------
+#
+# O botão só fica habilitado quando o questionário está completo.
+# Quando clicado, ele executa:
+# 1. consolidação do perfil final;
+# 2. geração da justificativa textual;
+# 3. armazenamento dos resultados na sessão.
+
+st.header("Geração do resultado")
+
+if not validation_result["is_valid"]:
+    st.write(
+        "Responda todas as perguntas obrigatórias e subperguntas ativadas "
+        "para habilitar a geração do resultado."
+    )
+
+if st.button("Gerar resultado", disabled=not validation_result["is_valid"]):
+    try:
+        classification_result = consolidate_final_profile(
+            answers=st.session_state.answers,
+            subanswers=st.session_state.subanswers,
+        )
+
+        justification_result = generate_justification(classification_result)
+
+        st.session_state.classification_result = classification_result
+        st.session_state.justification_result = justification_result
+        st.session_state.result_signature = get_answers_signature()
+
+        st.success("Resultado gerado com sucesso.")
+
+    except ValueError as error:
+        st.error(f"Não foi possível gerar o resultado: {error}")
+
+
+# -------------------------------------------------------------------
+# Exibição do resultado
+# -------------------------------------------------------------------
+
+render_result_section()
+
+
 # -------------------------------------------------------------------
 # Visualização temporária das respostas
 # -------------------------------------------------------------------
 #
-# Esta seção é apenas para desenvolvimento.
-# Ela ajuda a conferir se as respostas principais e condicionais estão sendo salvas.
+# Esta seção ainda é útil durante o desenvolvimento.
+# Ela poderá ser removida ou escondida em uma versão mais limpa do protótipo.
 
+st.divider()
 st.header("Respostas registradas até o momento")
 
 st.subheader("Perguntas principais")
@@ -409,23 +629,9 @@ else:
 # Botão temporário de limpeza
 # -------------------------------------------------------------------
 #
-# Este botão limpa respostas principais, subrespostas e campos visuais.
-# Ele será reaproveitado futuramente como base da função "Nova simulação".
+# Este botão limpa respostas, resultado e justificativa.
+# Ele tem função semelhante ao botão "Nova simulação".
 
 if st.button("Limpar respostas"):
-    # Limpa respostas principais.
-    st.session_state.answers = {}
-
-    # Limpa respostas das subperguntas.
-    st.session_state.subanswers = {}
-
-    # Incrementa o contador para recriar os campos radio.
-    st.session_state.reset_counter += 1
-
-    # Remove chaves antigas dos radios principais e condicionais.
-    for key in list(st.session_state.keys()):
-        if key.startswith("radio_"):
-            del st.session_state[key]
-
-    # Recarrega a aplicação já com os campos limpos.
+    clear_simulation()
     st.rerun()
