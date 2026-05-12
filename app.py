@@ -25,7 +25,12 @@ from ui.layout import (
 from utils.session import (
     initialize_session_state,
     get_answers_signature,
-    clear_simulation,
+)
+
+# Importa painel técnico e botão de limpeza.
+from ui.debug_panel import (
+    render_registered_answers_panel,
+    render_clear_answers_button,
 )
 
 
@@ -155,41 +160,14 @@ render_result_section()
 
 
 # -------------------------------------------------------------------
-# Visualização temporária das respostas
+# Painel técnico de respostas
 # -------------------------------------------------------------------
-#
-# Esta seção ainda é útil durante o desenvolvimento.
-# Ela poderá ser removida ou escondida em uma versão mais limpa do protótipo.
 
-st.divider()
-
-with st.expander("Ver respostas registradas"):
-    st.caption(
-        "Esta seção serve apenas para conferência técnica durante o desenvolvimento."
-    )
-
-    st.subheader("Perguntas principais")
-
-    if st.session_state.answers:
-        st.write(st.session_state.answers)
-    else:
-        st.write("Nenhuma resposta principal registrada ainda.")
-
-    st.subheader("Subperguntas condicionais")
-
-    if st.session_state.subanswers:
-        st.write(st.session_state.subanswers)
-    else:
-        st.write("Nenhuma subpergunta condicional registrada ainda.")
+render_registered_answers_panel()
 
 
 # -------------------------------------------------------------------
-# Botão temporário de limpeza
+# Botão de limpeza da simulação
 # -------------------------------------------------------------------
-#
-# Este botão limpa respostas, resultado e justificativa.
-# Ele tem função semelhante ao botão "Nova simulação".
 
-if st.button("Limpar respostas"):
-    clear_simulation()
-    st.rerun()
+render_clear_answers_button()
