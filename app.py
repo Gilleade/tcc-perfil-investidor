@@ -7,12 +7,8 @@ from ui.question_blocks import render_question_block
 # Importa a função de validação das respostas obrigatórias.
 from utils.validation import validate_required_answers
 
-
-# Importa a função que executa toda a sequência lógica da árvore.
-from logic.final_consolidation import consolidate_final_profile
-
-# Importa a função que gera a justificativa textual do resultado.
-from logic.justification import generate_justification
+# Importa a seção de geração do resultado.
+from ui.result_actions import render_result_generation
 
 # Importa a seção de resultado da interface.
 from ui.result_view import render_result_section
@@ -148,31 +144,7 @@ render_completion_status(validation_result)
 # Geração do resultado
 # -------------------------------------------------------------------
 
-st.header("Geração do resultado")
-
-if not validation_result["is_valid"]:
-    st.write(
-        "Responda todas as perguntas obrigatórias e subperguntas ativadas "
-        "para habilitar a geração do resultado."
-    )
-
-if st.button("Gerar resultado", disabled=not validation_result["is_valid"]):
-    try:
-        classification_result = consolidate_final_profile(
-            answers=st.session_state.answers,
-            subanswers=st.session_state.subanswers,
-        )
-
-        justification_result = generate_justification(classification_result)
-
-        st.session_state.classification_result = classification_result
-        st.session_state.justification_result = justification_result
-        st.session_state.result_signature = get_answers_signature()
-
-        st.success("Resultado gerado com sucesso.")
-
-    except ValueError as error:
-        st.error(f"Não foi possível gerar o resultado: {error}")
+render_result_generation(validation_result)
 
 
 # -------------------------------------------------------------------
