@@ -32,6 +32,64 @@ st.set_page_config(
 
 
 # -------------------------------------------------------------------
+# Estilos visuais simples
+# -------------------------------------------------------------------
+#
+# Este CSS melhora a aparência geral do protótipo sem alterar a lógica.
+
+def apply_custom_styles():
+    st.markdown(
+        """
+        <style>
+            .block-container {
+                padding-top: 2rem;
+                padding-bottom: 3rem;
+                max-width: 980px;
+            }
+
+            .app-subtitle {
+                color: #555;
+                font-size: 1.05rem;
+                line-height: 1.6;
+                margin-bottom: 1rem;
+            }
+
+            .section-note {
+                color: #666;
+                font-size: 0.95rem;
+                line-height: 1.5;
+                margin-bottom: 1rem;
+            }
+
+            .question-summary {
+                color: #666;
+                font-size: 0.88rem;
+                margin-top: -0.4rem;
+                margin-bottom: 0.6rem;
+            }
+
+            .status-box {
+                border: 1px solid rgba(128, 128, 128, 0.35);
+                border-radius: 12px;
+                padding: 1rem 1.2rem;
+                margin: 1rem 0;
+                background-color: var(--secondary-background-color);
+                color: var(--text-color);
+            }
+
+            div[data-testid="stRadio"] {
+                margin-bottom: 0.5rem;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+apply_custom_styles()
+
+
+# -------------------------------------------------------------------
 # Inicialização do estado da sessão
 # -------------------------------------------------------------------
 #
@@ -125,22 +183,22 @@ def clear_simulation():
 # Como salvamos respostas pelo id da alternativa, esta função converte
 # o id salvo para o índice correto na lista de opções.
 
-def get_selected_index(radio_options, current_answer_id):
+def get_selected_index(options, current_answer_id):
     """
     Retorna o índice da alternativa previamente selecionada.
 
-    Se ainda não houver resposta, retorna 0, que representa
-    a opção vazia "Selecione uma alternativa".
+    Se ainda não houver resposta, retorna None.
+    Isso permite que o st.radio inicie sem nenhuma alternativa marcada.
     """
 
     if current_answer_id is None:
-        return 0
+        return None
 
-    for index, option in enumerate(radio_options):
-        if option is not None and option["id"] == current_answer_id:
+    for index, option in enumerate(options):
+        if option["id"] == current_answer_id:
             return index
 
-    return 0
+    return None
 
 
 # -------------------------------------------------------------------
@@ -160,21 +218,22 @@ def render_question(question):
     question_text = question["text"]
     options = question["options"]
 
-    # Adiciona opção vazia para evitar seleção automática.
-    radio_options = [None] + options
-
     # Recupera resposta salva, se existir.
     current_answer_id = st.session_state.answers.get(question_id)
 
     # Descobre qual alternativa deve aparecer selecionada.
-    selected_index = get_selected_index(radio_options, current_answer_id)
+    # Quando não houver resposta, selected_index será None,
+    # fazendo o radio iniciar sem opção marcada.
+    selected_index = get_selected_index(options, current_answer_id)
 
     # Exibe a pergunta principal.
+    # Aqui usamos apenas as alternativas reais, sem incluir
+    # "Selecione uma alternativa" como opção.
     selected_option = st.radio(
         label=f"{question_id} — {question_text}",
-        options=radio_options,
+        options=options,
         index=selected_index,
-        format_func=lambda option: "Selecione uma alternativa" if option is None else option["label"],
+        format_func=lambda option: option["label"],
         key=f"radio_{question_id}_{st.session_state.reset_counter}"
     )
 
@@ -190,8 +249,19 @@ def render_question(question):
 
         selected_option_id = None
 
-    # Detalhes técnicos úteis para desenvolvimento e rastreabilidade.
-    with st.expander("Detalhes técnicos desta pergunta"):
+    # Resumo técnico curto, sempre visível.
+    st.markdown(
+        f"""
+        <p class="question-summary">
+        Critério: <strong>{question['criterion']}</strong> ·
+        Função: {question['logical_function']}
+        </p>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Detalhes técnicos completos, acessíveis quando o usuário quiser consultar.
+    with st.expander("Ver detalhes técnicos desta pergunta"):
         st.write(f"**Eixo:** {question['axis']}")
         st.write(f"**Critério:** {question['criterion']}")
         st.write(f"**Função lógica:** {question['logical_function']}")
@@ -216,23 +286,20 @@ def render_subquestion(subquestion):
     subquestion_text = subquestion["text"]
     options = subquestion["options"]
 
-    # Opção vazia para evitar marcação automática.
-    radio_options = [None] + options
-
     # Recupera resposta anterior, se existir.
     current_answer_id = st.session_state.subanswers.get(subquestion_id)
 
     # Define índice selecionado.
-    selected_index = get_selected_index(radio_options, current_answer_id)
+    selected_index = get_selected_index(options, current_answer_id)
 
     # Indica visualmente que é uma subpergunta.
     st.markdown(f"**Subpergunta {subquestion_id}**")
 
     selected_option = st.radio(
         label=subquestion_text,
-        options=radio_options,
+        options=options,
         index=selected_index,
-        format_func=lambda option: "Selecione uma alternativa" if option is None else option["label"],
+        format_func=lambda option: option["label"],
         key=f"radio_sub_{subquestion_id}_{st.session_state.reset_counter}"
     )
 
@@ -243,8 +310,19 @@ def render_subquestion(subquestion):
         if subquestion_id in st.session_state.subanswers:
             del st.session_state.subanswers[subquestion_id]
 
-    # Detalhes técnicos da subpergunta.
-    with st.expander(f"Detalhes técnicos da subpergunta {subquestion_id}"):
+    # Resumo técnico curto, sempre visível.
+    st.markdown(
+        f"""
+        <p class="question-summary">
+        Origem: <strong>{subquestion['parent_question_id']}</strong> ·
+        Função: {subquestion['logical_function']}
+        </p>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Detalhes técnicos completos, acessíveis quando o usuário quiser consultar.
+    with st.expander(f"Ver detalhes técnicos da subpergunta {subquestion_id}"):
         st.write(f"**Pergunta de origem:** {subquestion['parent_question_id']}")
         st.write(f"**Função lógica:** {subquestion['logical_function']}")
         st.write(f"**Finalidade:** {subquestion['purpose']}")
@@ -408,19 +486,21 @@ def render_result_section():
 
 st.title("Sistema de Apoio à Decisão para Classificação do Perfil do Investidor")
 
-st.write(
-    "Este protótipo tem finalidade acadêmica e foi desenvolvido para apoiar a "
-    "classificação do perfil do investidor com base em critérios estruturados."
+st.markdown(
+    """
+    <p class="app-subtitle">
+    Protótipo acadêmico desenvolvido em Python e Streamlit para classificar
+    o perfil do investidor por meio de perguntas estruturadas, árvore de decisão
+    e regras explícitas.
+    </p>
+    """,
+    unsafe_allow_html=True
 )
 
 st.warning(
-    "Atenção: este sistema não recomenda investimentos, não indica produtos "
-    "financeiros, não consulta dados de mercado e não substitui avaliação profissional."
-)
-
-st.info(
-    "Nesta etapa, o protótipo já permite responder ao questionário, validar o preenchimento "
-    "e gerar uma classificação com justificativa textual."
+    "Este sistema tem finalidade acadêmica. Ele não recomenda investimentos, "
+    "não indica produtos financeiros, não consulta dados de mercado e não substitui "
+    "avaliação profissional."
 )
 
 st.divider()
@@ -438,9 +518,14 @@ all_active_subquestion_ids = []
 # Bloco 1 — Objetivos e tolerância ao risco
 st.header("Bloco 1 — Objetivos e tolerância ao risco")
 
-st.write(
-    "Este bloco coleta informações sobre finalidade, horizonte temporal e "
-    "tolerância ao risco. Essas respostas formam o perfil preliminar."
+st.markdown(
+    """
+    <p class="section-note">
+    Responda às perguntas sobre finalidade, prazo e tolerância ao risco.
+    Essas respostas formam o perfil preliminar da classificação.
+    </p>
+    """,
+    unsafe_allow_html=True
 )
 
 all_active_subquestion_ids.extend(render_question_block("B1"))
@@ -449,9 +534,14 @@ all_active_subquestion_ids.extend(render_question_block("B1"))
 # Bloco 2 — Compatibilidade financeira
 st.header("Bloco 2 — Compatibilidade financeira")
 
-st.write(
-    "Este bloco coleta informações sobre necessidade futura de recursos, estabilidade "
-    "de renda e reserva financeira. Essas respostas podem limitar ou ajustar o perfil preliminar."
+st.markdown(
+    """
+    <p class="section-note">
+    Responda às perguntas sobre necessidade de recursos, renda e reserva financeira.
+    Essas respostas verificam a compatibilidade financeira do perfil preliminar.
+    </p>
+    """,
+    unsafe_allow_html=True
 )
 
 all_active_subquestion_ids.extend(render_question_block("B2"))
@@ -460,9 +550,14 @@ all_active_subquestion_ids.extend(render_question_block("B2"))
 # Bloco 3 — Conhecimento e experiência
 st.header("Bloco 3 — Conhecimento e experiência")
 
-st.write(
-    "Este bloco coleta informações sobre familiaridade, experiência prática e formação "
-    "relacionada. Essas respostas refinam a classificação final."
+st.markdown(
+    """
+    <p class="section-note">
+    Responda às perguntas sobre familiaridade, experiência e formação relacionada.
+    Essas respostas refinam a classificação final sem elevar o perfil isoladamente.
+    </p>
+    """,
+    unsafe_allow_html=True
 )
 
 all_active_subquestion_ids.extend(render_question_block("B3"))
@@ -517,23 +612,51 @@ if (
 # Seção de validação do questionário
 # -------------------------------------------------------------------
 
-st.header("Validação do preenchimento")
+# -------------------------------------------------------------------
+# Seção automática de validação do questionário
+# -------------------------------------------------------------------
 
-st.write(
-    "Use esta verificação para conferir se todas as perguntas obrigatórias "
-    "e subperguntas ativadas foram respondidas."
+st.header("Andamento do preenchimento")
+
+missing_questions_count = len(validation_result["missing_questions"])
+missing_subquestions_count = len(validation_result["missing_subquestions"])
+
+total_required = (
+    len(st.session_state.answers)
+    + missing_questions_count
+    + len(st.session_state.subanswers)
+    + missing_subquestions_count
 )
 
-if st.button("Verificar preenchimento"):
-    if validation_result["is_valid"]:
-        st.success(
-            "Questionário completo. O resultado já pode ser gerado."
-        )
-    else:
-        st.error("Ainda existem perguntas obrigatórias sem resposta.")
+answered_required = (
+    len(st.session_state.answers)
+    + len(st.session_state.subanswers)
+)
 
+progress_value = 0
+
+if total_required > 0:
+    progress_value = answered_required / total_required
+
+st.progress(progress_value)
+
+st.markdown(
+    f"""
+    <div class="status-box">
+        <strong>Status:</strong> {answered_required} de {total_required} respostas obrigatórias preenchidas.
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+if validation_result["is_valid"]:
+    st.success("Questionário completo. O resultado já pode ser gerado.")
+else:
+    st.info("O questionário ainda possui pendências.")
+
+    with st.expander("Ver perguntas pendentes"):
         if validation_result["missing_questions"]:
-            st.subheader("Perguntas principais pendentes")
+            st.write("**Perguntas principais pendentes:**")
 
             for question in validation_result["missing_questions"]:
                 st.write(
@@ -542,7 +665,7 @@ if st.button("Verificar preenchimento"):
                 )
 
         if validation_result["missing_subquestions"]:
-            st.subheader("Subperguntas condicionais pendentes")
+            st.write("**Subperguntas condicionais pendentes:**")
 
             for subquestion in validation_result["missing_subquestions"]:
                 st.write(
@@ -550,21 +673,9 @@ if st.button("Verificar preenchimento"):
                     f"(origem: {subquestion['parent_question_id']})"
                 )
 
-if validation_result["is_valid"]:
-    st.info("Status atual: o questionário está completo.")
-else:
-    st.info("Status atual: o questionário ainda possui pendências.")
-
-
 # -------------------------------------------------------------------
 # Geração do resultado
 # -------------------------------------------------------------------
-#
-# O botão só fica habilitado quando o questionário está completo.
-# Quando clicado, ele executa:
-# 1. consolidação do perfil final;
-# 2. geração da justificativa textual;
-# 3. armazenamento dos resultados na sessão.
 
 st.header("Geração do resultado")
 
@@ -608,21 +719,25 @@ render_result_section()
 # Ela poderá ser removida ou escondida em uma versão mais limpa do protótipo.
 
 st.divider()
-st.header("Respostas registradas até o momento")
 
-st.subheader("Perguntas principais")
+with st.expander("Ver respostas registradas"):
+    st.caption(
+        "Esta seção serve apenas para conferência técnica durante o desenvolvimento."
+    )
 
-if st.session_state.answers:
-    st.write(st.session_state.answers)
-else:
-    st.write("Nenhuma resposta principal registrada ainda.")
+    st.subheader("Perguntas principais")
 
-st.subheader("Subperguntas condicionais")
+    if st.session_state.answers:
+        st.write(st.session_state.answers)
+    else:
+        st.write("Nenhuma resposta principal registrada ainda.")
 
-if st.session_state.subanswers:
-    st.write(st.session_state.subanswers)
-else:
-    st.write("Nenhuma subpergunta condicional registrada ainda.")
+    st.subheader("Subperguntas condicionais")
+
+    if st.session_state.subanswers:
+        st.write(st.session_state.subanswers)
+    else:
+        st.write("Nenhuma subpergunta condicional registrada ainda.")
 
 
 # -------------------------------------------------------------------
