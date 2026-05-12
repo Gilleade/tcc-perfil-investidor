@@ -94,3 +94,39 @@ def clear_simulation():
     for key in list(st.session_state.keys()):
         if key.startswith("radio_"):
             del st.session_state[key]
+            
+            
+def remove_inactive_subanswers(active_subquestion_ids):
+    """
+    Remove respostas de subperguntas que não estão mais ativas.
+
+    Isso acontece quando o usuário altera uma pergunta principal e,
+    por causa disso, uma subpergunta condicional deixa de aparecer.
+
+    Parâmetro:
+    - active_subquestion_ids: lista com os ids das subperguntas atualmente ativas.
+    """
+
+    for subquestion_id in list(st.session_state.subanswers.keys()):
+        if subquestion_id not in active_subquestion_ids:
+            del st.session_state.subanswers[subquestion_id]
+
+
+def clear_outdated_result_if_answers_changed():
+    """
+    Remove o resultado antigo se as respostas atuais forem diferentes
+    das respostas usadas para gerar a classificação exibida.
+
+    Isso evita que o usuário veja um resultado que não corresponde mais
+    ao questionário atual.
+    """
+
+    current_signature = get_answers_signature()
+
+    if (
+        st.session_state.classification_result is not None
+        and st.session_state.result_signature != current_signature
+    ):
+        st.session_state.classification_result = None
+        st.session_state.justification_result = None
+        st.session_state.result_signature = None

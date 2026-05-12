@@ -23,7 +23,8 @@ from ui.layout import (
 # Importa o Streamlit para acessar o estado da sessão.
 from utils.session import (
     initialize_session_state,
-    get_answers_signature,
+    remove_inactive_subanswers,
+    clear_outdated_result_if_answers_changed,
 )
 
 # Importa painel técnico e botão de limpeza.
@@ -69,13 +70,8 @@ all_active_subquestion_ids = render_questionnaire()
 # -------------------------------------------------------------------
 # Limpeza automática de subrespostas inativas
 # -------------------------------------------------------------------
-#
-# Se uma subpergunta deixou de aparecer porque o usuário alterou uma resposta principal,
-# a resposta antiga dessa subpergunta não deve continuar armazenada.
 
-for subquestion_id in list(st.session_state.subanswers.keys()):
-    if subquestion_id not in all_active_subquestion_ids:
-        del st.session_state.subanswers[subquestion_id]
+remove_inactive_subanswers(all_active_subquestion_ids)
 
 
 # -------------------------------------------------------------------
@@ -100,15 +96,7 @@ validation_result = validate_required_answers(
 # Se o usuário alterar respostas depois de gerar resultado,
 # o resultado anterior deve ser descartado para evitar inconsistência.
 
-current_signature = get_answers_signature()
-
-if (
-    st.session_state.classification_result is not None
-    and st.session_state.result_signature != current_signature
-):
-    st.session_state.classification_result = None
-    st.session_state.justification_result = None
-    st.session_state.result_signature = None
+clear_outdated_result_if_answers_changed()
 
 
 # -------------------------------------------------------------------
