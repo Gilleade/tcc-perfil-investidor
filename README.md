@@ -703,6 +703,12 @@ Cobrem:
 - funcionamento de “Limpar respostas”;
 - remoção de resultado antigo após alteração nas respostas.
 
+### Testes de resultados
+
+```bash
+python .\run_test_cases.py
+```
+
 ---
 
 ## 17. Padrão de desenvolvimento adotado

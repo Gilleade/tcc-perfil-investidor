@@ -494,21 +494,32 @@ def apply_knowledge_refinement(current_profile, answers, subanswers):
     # Aplica a redução.
     refined_profile = _reduce_profile(current_profile, reduction_steps)
 
+    # Recalcula a redução efetiva real.
+    # Isso evita registrar redução quando o perfil já estava no piso.
+    input_index = PROFILE_ORDER.index(current_profile)
+    output_index = PROFILE_ORDER.index(refined_profile)
+    effective_reduction_steps = input_index - output_index
+
     # Se o perfil Arrojado estiver bloqueado, garantimos que o resultado
     # deste bloco não permaneça como Arrojado.
     if PROFILE_ARROJADO in analysis["blocked_profiles"] and refined_profile == PROFILE_ARROJADO:
         refined_profile = PROFILE_MODERADO
-        reduction_steps = max(reduction_steps, 1)
         reduction_reason = "Perfil Arrojado bloqueado por limitação de conhecimento ou experiência."
+
+    # Recalcula a redução efetiva real depois de todos os ajustes prudenciais.
+    input_index = PROFILE_ORDER.index(current_profile)
+    output_index = PROFILE_ORDER.index(refined_profile)
+    effective_reduction_steps = input_index - output_index
 
     # Monta log lógico para justificativa futura.
     logical_log = []
 
-    if reduction_steps == 0:
+    if effective_reduction_steps == 0:
         logical_log.append(
-            "O refinamento por conhecimento e experiência manteve o perfil atual, pois não foram identificadas limitações suficientes para redução."
+            "O refinamento por conhecimento e experiência manteve o perfil atual. "
+            "Mesmo com eventuais limitações registradas, não houve redução efetiva do perfil nesta etapa."
         )
-    elif reduction_steps == 1:
+    elif effective_reduction_steps == 1:
         logical_log.append(
             f"O refinamento por conhecimento e experiência reduziu o perfil em 1 nível. Motivo: {reduction_reason}"
         )
@@ -533,7 +544,7 @@ def apply_knowledge_refinement(current_profile, answers, subanswers):
         "stage": "refinamento_conhecimento_experiencia",
         "input_profile": current_profile,
         "profile": refined_profile,
-        "reduction_steps": reduction_steps,
+        "reduction_steps": effective_reduction_steps,
         "reduction_reason": reduction_reason,
         "limitations": analysis["limitations"],
         "moderations": analysis["moderations"],

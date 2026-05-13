@@ -483,23 +483,32 @@ def apply_financial_compatibility(preliminary_profile, answers, subanswers):
     # Aplica a redução ao perfil preliminar.
     adjusted_profile = reduce_profile(preliminary_profile, reduction_steps)
 
+    # Recalcula a redução efetiva real.
+    # Isso evita registrar redução quando o perfil já estava no piso (Conservador).
+    input_index = PROFILE_ORDER.index(preliminary_profile)
+    output_index = PROFILE_ORDER.index(adjusted_profile)
+    effective_reduction_steps = input_index - output_index
+
     # Se o perfil Arrojado estiver bloqueado, garantimos que a saída
     # da compatibilidade financeira não permaneça como Arrojado.
     if PROFILE_ARROJADO in analysis["blocked_profiles"] and adjusted_profile == PROFILE_ARROJADO:
         adjusted_profile = PROFILE_MODERADO
-
-        # Se o bloqueio alterou o perfil, registramos pelo menos 1 nível de redução.
-        reduction_steps = max(reduction_steps, 1)
         reduction_reason = "Perfil Arrojado bloqueado por incompatibilidade financeira."
+
+    # Recalcula a redução efetiva real depois de todos os ajustes prudenciais.
+    input_index = PROFILE_ORDER.index(preliminary_profile)
+    output_index = PROFILE_ORDER.index(adjusted_profile)
+    effective_reduction_steps = input_index - output_index
 
     # Monta registro lógico para uso futuro na justificativa textual.
     logical_log = []
 
-    if reduction_steps == 0:
+    if effective_reduction_steps == 0:
         logical_log.append(
-            "A compatibilidade financeira manteve o perfil preliminar, pois não foram identificadas travas fortes ou combinações moderadas suficientes para redução."
+            "A compatibilidade financeira manteve o perfil preliminar. "
+            "Mesmo com eventuais restrições registradas, não houve redução efetiva do perfil final desta etapa."
         )
-    elif reduction_steps == 1:
+    elif effective_reduction_steps == 1:
         logical_log.append(
             f"A compatibilidade financeira reduziu o perfil em 1 nível. Motivo: {reduction_reason}"
         )
@@ -522,7 +531,7 @@ def apply_financial_compatibility(preliminary_profile, answers, subanswers):
         "stage": "compatibilidade_financeira",
         "input_profile": preliminary_profile,
         "profile": adjusted_profile,
-        "reduction_steps": reduction_steps,
+        "reduction_steps": effective_reduction_steps,
         "reduction_reason": reduction_reason,
         "strong_locks": analysis["strong_locks"],
         "moderations": analysis["moderations"],
