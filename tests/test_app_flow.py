@@ -257,8 +257,11 @@ def test_generate_arrojado_result():
 
     assert "Resultado da classificação" in rendered_text
     assert "Perfil final: Arrojado" in rendered_text
-    assert "Percurso da decisão" in rendered_text
-    assert "Fluxograma do percurso decisório" in rendered_text
+    assert "Como cada resposta influenciou o resultado" in rendered_text
+    assert "1. Perfil preliminar" in rendered_text
+    assert "2. Situação financeira" in rendered_text
+    assert "3. Conhecimento e experiência" in rendered_text
+    assert "4. Consolidação do resultado final" in rendered_text
 
 
 def test_generate_moderado_result():

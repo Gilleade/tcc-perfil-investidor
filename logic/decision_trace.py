@@ -65,6 +65,136 @@ def _find_option_label(question_data, option_id):
     return str(option_id)
 
 
+def _find_option_data(question_data, option_id):
+    """
+    Busca os dados completos da alternativa escolhida.
+
+    Diferente de _find_option_label, esta função retorna o dicionário
+    inteiro da alternativa, permitindo acessar campos como:
+    - label;
+    - level;
+    - id.
+    """
+
+    if not question_data:
+        return None
+
+    for option in question_data.get("options", []):
+        if option.get("id") == option_id:
+            return option
+
+    return None
+
+
+def _infer_direction_label(source_id, option_data):
+    """
+    Define a tendência visual exibida na tela de resultado.
+
+    Essa função não altera a lógica da árvore.
+    Ela apenas traduz o campo "level" da alternativa escolhida
+    em uma mensagem explicativa para o usuário.
+    """
+
+    if not option_data:
+        return "Influência registrada na classificação"
+
+    level = option_data.get("level", "")
+
+    # ------------------------------------------------------------
+    # Bloco 1 — Perfil preliminar
+    # ------------------------------------------------------------
+    #
+    # Neste bloco, as alternativas já apontam diretamente para
+    # Conservador, Moderado ou Arrojado.
+
+    if level == "conservador":
+        return "Tendência: Conservador"
+
+    if level == "moderado":
+        return "Tendência: Moderado"
+
+    if level == "arrojado":
+        return "Tendência: Arrojado"
+
+    # ------------------------------------------------------------
+    # Bloco 2 — Situação financeira
+    # ------------------------------------------------------------
+    #
+    # Aqui a leitura não é “desejo de perfil”, mas compatibilidade
+    # financeira. Por isso usamos linguagem de limite prudencial.
+
+    if level in [
+        "necessidade_curto_prazo",
+        "restricao_forte",
+        "uso_relevante",
+        "liquidez_essencial",
+        "compromete_essencial",
+        "reserva_insuficiente",
+        "comprometeria_essenciais",
+    ]:
+        return "Tendência prudencial: Conservador"
+
+    if level in [
+        "moderacao",
+        "uso_parcial",
+        "liquidez_planejada",
+        "liquidez_desejada",
+        "impacto_parcial",
+        "reserva_parcial",
+        "prazo_curto_parcial",
+        "incerteza",
+    ]:
+        return "Tendência prudencial: Moderado"
+
+    if level in [
+        "sem_necessidade_curto_prazo",
+        "sem_restricao",
+        "nao_compromete",
+        "reserva_suficiente",
+    ]:
+        return "Não impõe limitação prudencial relevante"
+
+    # ------------------------------------------------------------
+    # Bloco 3 — Conhecimento e experiência
+    # ------------------------------------------------------------
+    #
+    # Aqui a leitura é de sustentação ou limitação da classificação.
+
+    if level in [
+        "baixo_conhecimento",
+        "baixa_experiencia",
+        "sem_formacao_relacionada",
+        "superficial",
+        "nao_compreende_risco",
+        "experiencia_episodica",
+        "experiencia_simples",
+    ]:
+        return "Limita perfis mais altos"
+
+    if level in [
+        "conhecimento_intermediario",
+        "experiencia_intermediaria",
+        "contato_basico",
+        "estudo_basico",
+        "compreensao_parcial",
+        "experiencia_moderada",
+    ]:
+        return "Sustenta perfil Moderado"
+
+    if level in [
+        "conhecimento_alto",
+        "experiencia_alta",
+        "formacao_relevante",
+        "familiaridade_efetiva",
+        "compreensao_adequada",
+        "experiencia_continua",
+        "experiencia_maior_oscilacao",
+    ]:
+        return "Sustenta perfis mais altos"
+
+    return "Influência registrada na classificação"
+
+
 def _profile_level(profile):
     """
     Retorna o nível ordinal do perfil.
@@ -86,6 +216,7 @@ def _add_trace_item(
     efeito,
     perfil_antes=None,
     perfil_depois=None,
+    direcao=None,
 ):
     """
     Adiciona uma linha ao rastreamento da decisão.
@@ -103,6 +234,7 @@ def _add_trace_item(
             "perfil_depois": perfil_depois,
             "nivel_antes": _profile_level(perfil_antes),
             "nivel_depois": _profile_level(perfil_depois),
+            "direcao": direcao,
         }
     )
 
@@ -117,6 +249,9 @@ def _add_question_trace(trace, question_id, answers, etapa, efeito):
 
     question_data = _find_question(question_id)
     answer_id = answers.get(question_id)
+    
+    option_data = _find_option_data(question_data, answer_id)
+    direction_label = _infer_direction_label(question_id, option_data)
 
     _add_trace_item(
         trace=trace,
@@ -126,6 +261,7 @@ def _add_question_trace(trace, question_id, answers, etapa, efeito):
         resposta=_find_option_label(question_data, answer_id),
         bloco=question_data.get("block") if question_data else "",
         efeito=efeito,
+        direcao=direction_label,
     )
 
 
@@ -140,6 +276,9 @@ def _add_subquestion_trace(trace, subquestion_id, subanswers, etapa, efeito):
     subquestion_data = _find_subquestion(subquestion_id)
     answer_id = subanswers.get(subquestion_id)
 
+    option_data = _find_option_data(subquestion_data, answer_id)
+    direction_label = _infer_direction_label(subquestion_id, option_data)
+
     _add_trace_item(
         trace=trace,
         item_id=subquestion_id,
@@ -148,6 +287,7 @@ def _add_subquestion_trace(trace, subquestion_id, subanswers, etapa, efeito):
         resposta=_find_option_label(subquestion_data, answer_id),
         bloco=subquestion_data.get("block") if subquestion_data else "",
         efeito=efeito,
+        direcao=direction_label,
     )
 
 
