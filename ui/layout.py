@@ -149,11 +149,6 @@ def apply_custom_styles():
                 opacity: 0.86;
             }
 
-            .tree-line-4 {
-                margin-left: 3.6rem;
-                font-weight: 700;
-            }
-
             .tree-block-footer {
                 margin-top: 0.85rem;
                 padding: 0.8rem 1rem;
