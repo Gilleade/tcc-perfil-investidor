@@ -70,24 +70,6 @@ def render_question(question):
 
         selected_option_id = None
 
-    # Resumo técnico curto, sempre visível.
-    st.markdown(
-        f"""
-        <p class="question-summary">
-        Critério: <strong>{question['criterion']}</strong> ·
-        Função: {question['logical_function']}
-        </p>
-        """,
-        unsafe_allow_html=True
-    )
-
-    # Detalhes técnicos completos, acessíveis quando o usuário quiser consultar.
-    with st.expander("Ver detalhes técnicos desta pergunta"):
-        st.write(f"**Eixo:** {question['axis']}")
-        st.write(f"**Critério:** {question['criterion']}")
-        st.write(f"**Função lógica:** {question['logical_function']}")
-        st.write(f"**Peso lógico:** {question['logical_weight']}")
-
     return selected_option_id
 
 
@@ -126,23 +108,6 @@ def render_subquestion(subquestion):
     else:
         if subquestion_id in st.session_state.subanswers:
             del st.session_state.subanswers[subquestion_id]
-
-    # Resumo técnico curto, sempre visível.
-    st.markdown(
-        f"""
-        <p class="question-summary">
-        Origem: <strong>{subquestion['parent_question_id']}</strong> ·
-        Função: {subquestion['logical_function']}
-        </p>
-        """,
-        unsafe_allow_html=True
-    )
-
-    # Detalhes técnicos completos, acessíveis quando o usuário quiser consultar.
-    with st.expander(f"Ver detalhes técnicos da subpergunta {subquestion_id}"):
-        st.write(f"**Pergunta de origem:** {subquestion['parent_question_id']}")
-        st.write(f"**Função lógica:** {subquestion['logical_function']}")
-        st.write(f"**Finalidade:** {subquestion['purpose']}")
 
 
 def render_question_block(block_id):

@@ -20,8 +20,20 @@ PROFILE_ORDER = [
     PROFILE_ARROJADO,
 ]
 
+PROFILE_LEVELS = {
+    PROFILE_CONSERVADOR: 1,
+    PROFILE_MODERADO: 2,
+    PROFILE_ARROJADO: 3,
+}
 
-def _get_answer_value(answers, question_id):
+LEVEL_TO_PROFILE = {
+    1: PROFILE_CONSERVADOR,
+    2: PROFILE_MODERADO,
+    3: PROFILE_ARROJADO,
+}
+
+
+def _get_answer_value(answers, question_id, allowed_values=None):
     """
     Busca o valor numérico da resposta de uma pergunta principal.
 
@@ -32,19 +44,29 @@ def _get_answer_value(answers, question_id):
     - question_id: identificador da pergunta.
       Exemplo: "P4"
 
+    - allowed_values: lista opcional de alternativas válidas.
+      Exemplo: [1, 2] para perguntas Sim/Não.
+
     Retorno:
-    - número inteiro da alternativa escolhida: 1, 2 ou 3.
+    - número inteiro da alternativa escolhida.
 
     Se a resposta estiver ausente ou inválida, gera erro.
     """
 
     if question_id not in answers:
-        raise ValueError(f"A pergunta {question_id} é obrigatória para aplicar a compatibilidade financeira.")
+        raise ValueError(
+            f"A pergunta {question_id} é obrigatória para aplicar a compatibilidade financeira."
+        )
 
     value = answers.get(question_id)
 
-    if value not in [1, 2, 3]:
-        raise ValueError(f"A resposta da pergunta {question_id} deve ser 1, 2 ou 3.")
+    if allowed_values is None:
+        allowed_values = [1, 2, 3]
+
+    if value not in allowed_values:
+        raise ValueError(
+            f"A resposta da pergunta {question_id} deve estar entre {allowed_values}."
+        )
 
     return value
 
@@ -143,7 +165,7 @@ def _analyze_financial_answers(answers, subanswers):
     """
 
     # Respostas principais do Bloco 2.
-    p4 = _get_answer_value(answers, "P4")
+    p4 = _get_answer_value(answers, "P4", allowed_values=[1, 2])
     p5 = _get_answer_value(answers, "P5")
     p6 = _get_answer_value(answers, "P6")
 
@@ -168,23 +190,31 @@ def _analyze_financial_answers(answers, subanswers):
     # do valor será usada ou se o uso está ligado a despesa essencial.
 
     if p4 == 1:
-        _add_event(
-            strong_locks,
-            "trava_forte",
-            "P4",
-            "Há necessidade declarada de utilizar o recurso em até 12 meses."
-        )
+        # Se o usuário pode precisar do valor no curto prazo,
+        # mas possui renda estável e reserva suficiente,
+        # a situação financeira limita o perfil máximo a Moderado,
+        # em vez de reduzir diretamente para Conservador.
+        if p5 == 3 and p6 == 3:
+            _add_event(
+                moderations,
+                "moderacao",
+                "P4",
+                "Há possibilidade de necessidade do valor no curto prazo, mas a renda estável e a reserva suficiente permitem limitar o perfil a Moderado."
+            )
 
-        if PROFILE_ARROJADO not in blocked_profiles:
-            blocked_profiles.append(PROFILE_ARROJADO)
+            if PROFILE_ARROJADO not in blocked_profiles:
+                blocked_profiles.append(PROFILE_ARROJADO)
 
-    elif p4 == 2:
-        _add_event(
-            moderations,
-            "moderacao",
-            "P4",
-            "Há possibilidade de necessidade do recurso entre 1 e 3 anos."
-        )
+        else:
+            _add_event(
+                strong_locks,
+                "trava_forte",
+                "P4",
+                "Há possibilidade de necessidade do valor no curto prazo sem robustez financeira suficiente."
+            )
+
+            if PROFILE_ARROJADO not in blocked_profiles:
+                blocked_profiles.append(PROFILE_ARROJADO)
 
     # Subpergunta 4A: uso relevante da maior parte do valor.
     if sub_4a == 1:
@@ -381,65 +411,114 @@ def _analyze_financial_answers(answers, subanswers):
     }
 
 
-def _define_reduction_steps(preliminary_profile, analysis):
+def _define_financial_limit_profile(answers, subanswers, analysis):
     """
-    Define se a compatibilidade financeira mantém ou reduz o perfil.
+    Define o perfil máximo compatível com a situação financeira.
 
-    Regras resumidas da Branch 3:
-    - sem trava forte e sem combinação incompatível: mantém;
-    - uma trava forte isolada ou duas moderações: reduz 1 nível;
-    - liquidez forte + fragilidade financeira relevante: reduz 2 níveis;
-    - perfil Arrojado fortemente contradito pelo bloco financeiro: reduz 2 níveis.
+    Essa função representa o limite prudencial financeiro.
+
+    Em vez de decidir o perfil final diretamente, ela define até qual
+    perfil a situação financeira permite chegar.
+
+    Exemplos:
+    - Limite Arrojado: sem restrição financeira relevante.
+    - Limite Moderado: há restrição financeira moderada.
+    - Limite Conservador: há fragilidade financeira relevante.
     """
+
+    p4 = _get_answer_value(answers, "P4", allowed_values=[1, 2])
+    p5 = _get_answer_value(answers, "P5")
+    p6 = _get_answer_value(answers, "P6")
+
+    sub_4a = _get_subanswer_value(subanswers, "4A")
+    sub_4b = _get_subanswer_value(subanswers, "4B")
+    sub_5a = _get_subanswer_value(subanswers, "5A")
+    sub_6a = _get_subanswer_value(subanswers, "6A")
+    sub_6b = _get_subanswer_value(subanswers, "6B")
 
     strong_locks = analysis["strong_locks"]
     moderations = analysis["moderations"]
-    inconsistencies = analysis["inconsistencies"]
 
     strong_count = len(strong_locks)
     moderation_count = len(moderations)
 
-    strong_sources = {event["source"] for event in strong_locks}
-
     # ---------------------------------------------------------------
-    # Redução de 2 níveis
+    # Limite Conservador
     # ---------------------------------------------------------------
     #
-    # Cenários prudenciais mais fortes.
-    # Eles representam combinação entre liquidez e fragilidade financeira.
+    # O perfil máximo passa a ser Conservador quando a situação financeira
+    # indica dependência relevante do recurso, ausência de reserva suficiente
+    # ou possibilidade de comprometimento de despesas essenciais.
 
-    has_short_term_liquidity_lock = bool({"P4", "4A", "4B"} & strong_sources)
-    has_financial_fragility_lock = bool({"P5", "5A", "P6", "6A", "6B"} & strong_sources)
+    if sub_4a == 1 or sub_4b == 1:
+        return (
+            PROFILE_CONSERVADOR,
+            "Necessidade do valor no curto prazo associada a uso relevante ou despesa essencial."
+        )
 
-    if has_short_term_liquidity_lock and has_financial_fragility_lock:
-        return 2, "Combinação de trava forte de liquidez com fragilidade financeira relevante."
+    if p4 == 1 and (p5 == 1 or p6 == 1):
+        return (
+            PROFILE_CONSERVADOR,
+            "Possibilidade de necessidade do valor no curto prazo combinada com fragilidade de renda ou reserva."
+        )
+
+    if sub_5a == 1:
+        return (
+            PROFILE_CONSERVADOR,
+            "Possível perda temporária ou imobilização do recurso comprometeria o orçamento essencial."
+        )
+
+    if p6 == 1 and (sub_6a == 1 or sub_6b == 1):
+        return (
+            PROFILE_CONSERVADOR,
+            "Ausência de reserva suficiente combinada com dependência do investimento ou comprometimento de despesas essenciais."
+        )
 
     if strong_count >= 3:
-        return 2, "Acúmulo de múltiplas travas financeiras fortes."
-
-    if preliminary_profile == PROFILE_ARROJADO and strong_count >= 2:
-        return 2, "Perfil preliminar Arrojado contradito por múltiplas travas financeiras fortes."
-
-    if preliminary_profile == PROFILE_ARROJADO and inconsistencies and strong_count >= 1:
-        return 2, "Perfil preliminar Arrojado contradito por inconsistência financeira relevante."
+        return (
+            PROFILE_CONSERVADOR,
+            "Acúmulo de múltiplas travas financeiras fortes."
+        )
 
     # ---------------------------------------------------------------
-    # Redução de 1 nível
+    # Limite Moderado
     # ---------------------------------------------------------------
     #
-    # Cenários moderados ou com uma trava forte isolada.
+    # O perfil máximo passa a ser Moderado quando há restrições financeiras
+    # relevantes, mas não suficientes para caracterizar fragilidade severa.
 
-    if strong_count >= 1:
-        return 1, "Presença de trava financeira forte isolada."
+    if p4 == 1:
+        return (
+            PROFILE_MODERADO,
+            "Possibilidade de necessidade do valor no curto prazo, com condição financeira suficiente para evitar classificação conservadora."
+        )
+
+    if p5 == 2 or p6 == 2:
+        return (
+            PROFILE_MODERADO,
+            "Renda ou reserva financeira parcialmente adequada, exigindo limitação prudencial do perfil."
+        )
 
     if moderation_count >= 2:
-        return 1, "Combinação de duas ou mais moderações financeiras."
+        return (
+            PROFILE_MODERADO,
+            "Combinação de duas ou mais moderações financeiras."
+        )
+
+    if strong_count >= 1:
+        return (
+            PROFILE_MODERADO,
+            "Presença de restrição financeira pontual."
+        )
 
     # ---------------------------------------------------------------
-    # Manutenção
+    # Sem limitação financeira relevante
     # ---------------------------------------------------------------
 
-    return 0, "Não foram identificadas travas financeiras suficientes para reduzir o perfil."
+    return (
+        PROFILE_ARROJADO,
+        "Não foram identificadas restrições financeiras suficientes para limitar o perfil."
+    )
 
 
 def apply_financial_compatibility(preliminary_profile, answers, subanswers):
@@ -474,28 +553,23 @@ def apply_financial_compatibility(preliminary_profile, answers, subanswers):
     # Analisa as respostas financeiras e identifica sinais.
     analysis = _analyze_financial_answers(answers, subanswers)
 
-    # Define quantos níveis o perfil deve ser reduzido.
-    reduction_steps, reduction_reason = _define_reduction_steps(
-        preliminary_profile=preliminary_profile,
+    # Define o perfil máximo compatível com a situação financeira.
+    financial_limit_profile, reduction_reason = _define_financial_limit_profile(
+        answers=answers,
+        subanswers=subanswers,
         analysis=analysis,
     )
 
-    # Aplica a redução ao perfil preliminar.
-    adjusted_profile = reduce_profile(preliminary_profile, reduction_steps)
+    # Aplica o limite prudencial:
+    # o perfil após finanças nunca pode ser maior que o limite financeiro.
+    preliminary_level = PROFILE_LEVELS[preliminary_profile]
+    financial_limit_level = PROFILE_LEVELS[financial_limit_profile]
+
+    adjusted_level = min(preliminary_level, financial_limit_level)
+    adjusted_profile = LEVEL_TO_PROFILE[adjusted_level]
 
     # Recalcula a redução efetiva real.
     # Isso evita registrar redução quando o perfil já estava no piso (Conservador).
-    input_index = PROFILE_ORDER.index(preliminary_profile)
-    output_index = PROFILE_ORDER.index(adjusted_profile)
-    effective_reduction_steps = input_index - output_index
-
-    # Se o perfil Arrojado estiver bloqueado, garantimos que a saída
-    # da compatibilidade financeira não permaneça como Arrojado.
-    if PROFILE_ARROJADO in analysis["blocked_profiles"] and adjusted_profile == PROFILE_ARROJADO:
-        adjusted_profile = PROFILE_MODERADO
-        reduction_reason = "Perfil Arrojado bloqueado por incompatibilidade financeira."
-
-    # Recalcula a redução efetiva real depois de todos os ajustes prudenciais.
     input_index = PROFILE_ORDER.index(preliminary_profile)
     output_index = PROFILE_ORDER.index(adjusted_profile)
     effective_reduction_steps = input_index - output_index
@@ -538,4 +612,8 @@ def apply_financial_compatibility(preliminary_profile, answers, subanswers):
         "blocked_profiles": analysis["blocked_profiles"],
         "inconsistencies": analysis["inconsistencies"],
         "log": logical_log,
+        "financial_limit_profile": financial_limit_profile,
+        "financial_limit_level": financial_limit_level,
+        "input_profile_level": preliminary_level,
+        "output_profile_level": adjusted_level,
     }

@@ -44,6 +44,18 @@ def initialize_session_state():
         # Guarda uma assinatura das respostas usadas para gerar o resultado.
         # Isso evita mostrar resultado antigo depois que o usuário altera respostas.
         st.session_state.result_signature = None
+        
+    if "app_started" not in st.session_state:
+        # Controla se a tela inicial já foi ultrapassada.
+        st.session_state.app_started = False
+
+    if "current_flow_index" not in st.session_state:
+        # Controla qual pergunta/subpergunta está sendo exibida no fluxo sequencial.
+        st.session_state.current_flow_index = 0
+
+    if "questionnaire_finished" not in st.session_state:
+        # Controla se o usuário chegou ao final do questionário.
+        st.session_state.questionnaire_finished = False
 
 
 def get_answers_signature():
@@ -86,6 +98,11 @@ def clear_simulation():
     st.session_state.classification_result = None
     st.session_state.justification_result = None
     st.session_state.result_signature = None
+    # Ao iniciar nova simulação, não voltamos para a tela inicial.
+    # O usuário retorna diretamente para a primeira pergunta.
+    st.session_state.app_started = True
+    st.session_state.current_flow_index = 0
+    st.session_state.questionnaire_finished = False
 
     # Incrementa o contador para recriar os campos de seleção.
     st.session_state.reset_counter += 1

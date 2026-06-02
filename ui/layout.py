@@ -16,7 +16,7 @@ def apply_custom_styles():
             .block-container {
                 padding-top: 2rem;
                 padding-bottom: 3rem;
-                max-width: 980px;
+                max-width: 760px;
             }
 
             .app-subtitle {
@@ -56,6 +56,40 @@ def apply_custom_styles():
         """,
         unsafe_allow_html=True
     )
+
+
+def render_start_screen():
+    """
+    Exibe a tela inicial minimalista do protótipo.
+
+    Essa tela aparece apenas no primeiro acesso.
+    Depois que o usuário inicia a simulação, novas simulações voltam
+    diretamente para a primeira pergunta.
+    """
+
+    st.title("Sistema de Apoio ao Entendimento do Perfil do Investidor")
+
+    st.markdown(
+        """
+        <p class="app-subtitle">
+        Responda algumas perguntas sobre seus objetivos, sua situação financeira
+        e seu conhecimento sobre investimentos para visualizar uma classificação
+        estimada do seu perfil.
+        </p>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.warning(
+        "Este protótipo tem finalidade acadêmica e classificatória. "
+        "Ele não recomenda investimentos e não substitui avaliação profissional."
+    )
+
+    if st.button("Começar", type="primary", width="stretch"):
+        st.session_state.app_started = True
+        st.session_state.current_flow_index = 0
+        st.session_state.questionnaire_finished = False
+        st.rerun()
 
 
 def render_header():

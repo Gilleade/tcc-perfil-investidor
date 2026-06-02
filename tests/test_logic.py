@@ -47,7 +47,7 @@ class TestFinancialCompatibility(unittest.TestCase):
     def test_financial_maintains_arrojado_without_restrictions(self):
         result = apply_financial_compatibility(
             "Arrojado",
-            {"P4": 3, "P5": 3, "P6": 3},
+            {"P4": 2, "P5": 3, "P6": 3},
             {}
         )
 
@@ -130,7 +130,7 @@ class TestFinalConsolidation(unittest.TestCase):
     def test_final_arrojado_full_compatibility(self):
         answers = {
             "P1": 3, "P2": 3, "P3": 3,
-            "P4": 3, "P5": 3, "P6": 3,
+            "P4": 2, "P5": 3, "P6": 3,
             "P7": 3, "P8": 3, "P9": 3,
         }
 
@@ -169,7 +169,7 @@ class TestFinalConsolidation(unittest.TestCase):
     def test_final_moderado_kept_when_financial_and_knowledge_are_adequate(self):
         answers = {
             "P1": 2, "P2": 2, "P3": 2,
-            "P4": 3, "P5": 3, "P6": 3,
+            "P4": 2, "P5": 3, "P6": 3,
             "P7": 2, "P8": 2, "P9": 2,
         }
 
@@ -187,7 +187,7 @@ class TestFinalConsolidation(unittest.TestCase):
     def test_final_conservador_not_raised_by_high_knowledge(self):
         answers = {
             "P1": 1, "P2": 1, "P3": 1,
-            "P4": 3, "P5": 3, "P6": 3,
+            "P4": 2, "P5": 3, "P6": 3,
             "P7": 3, "P8": 3, "P9": 3,
         }
 
@@ -211,7 +211,7 @@ class TestJustification(unittest.TestCase):
     def test_justification_summary_for_arrojado(self):
         answers = {
             "P1": 3, "P2": 3, "P3": 3,
-            "P4": 3, "P5": 3, "P6": 3,
+            "P4": 2, "P5": 3, "P6": 3,
             "P7": 3, "P8": 3, "P9": 3,
         }
 
@@ -228,7 +228,7 @@ class TestJustification(unittest.TestCase):
     def test_justification_full_text_contains_sections(self):
         answers = {
             "P1": 2, "P2": 2, "P3": 2,
-            "P4": 3, "P5": 3, "P6": 3,
+            "P4": 2, "P5": 3, "P6": 3,
             "P7": 2, "P8": 2, "P9": 2,
         }
 

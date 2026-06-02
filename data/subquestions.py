@@ -79,9 +79,9 @@ SUBQUESTIONS = [
             {"id": 3, "label": "não sei informar com segurança", "level": "incerteza"},
         ],
 
-        # A subpergunta 4A aparece quando P4 recebe resposta 1 ou 2.
-        # P4 = necessidade futura de recursos.
-        "trigger_option_ids": [1, 2],
+        # A subpergunta 4A aparece quando P4 recebe resposta 1.
+        # P4 = necessidade possível do valor no curto prazo.
+        "trigger_option_ids": [1],
         "logical_function": "Refinar trava financeira",
         "purpose": "Distinguir trava forte de moderação",
         "auto_activate": True,
@@ -97,8 +97,8 @@ SUBQUESTIONS = [
             {"id": 3, "label": "conveniência eventual", "level": "liquidez_desejada"},
         ],
 
-        # A subpergunta 4B também aparece quando P4 recebe resposta 1 ou 2.
-        "trigger_option_ids": [1, 2],
+        # A subpergunta 4B também aparece quando P4 recebe resposta 1.
+        "trigger_option_ids": [1],
         "logical_function": "Registrar inconsistência e reduzir incerteza",
         "purpose": "Separar liquidez realmente necessária de liquidez apenas desejada",
         "auto_activate": True,

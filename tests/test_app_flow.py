@@ -47,6 +47,10 @@ def make_app(answers=None, subanswers=None):
     at.session_state["classification_result"] = None
     at.session_state["justification_result"] = None
     at.session_state["result_signature"] = None
+    
+    at.session_state["app_started"] = True
+    at.session_state["current_flow_index"] = 0
+    at.session_state["questionnaire_finished"] = bool(answers)
 
     # Executa o app com esse estado inicial.
     at.run(timeout=10)
@@ -105,10 +109,16 @@ def get_rendered_text(at):
 
 def generate_result(at):
     """
-    Clica no botão Gerar resultado e retorna o app atualizado.
+    Gera o resultado no fluxo atual.
+
+    Na versão sequencial, não existe mais botão "Gerar resultado".
+    Quando questionnaire_finished está True e as respostas são válidas,
+    o app gera o resultado automaticamente.
     """
 
-    return click_button(at, "Gerar resultado")
+    at.session_state["questionnaire_finished"] = True
+    at.run(timeout=10)
+    return at
 
 
 def arrojado_answers():
@@ -124,7 +134,7 @@ def arrojado_answers():
         "P1": 3,
         "P2": 3,
         "P3": 3,
-        "P4": 3,
+        "P4": 2,
         "P5": 3,
         "P6": 3,
         "P7": 3,
@@ -155,7 +165,7 @@ def moderado_answers():
         "P1": 2,
         "P2": 2,
         "P3": 2,
-        "P4": 3,
+        "P4": 2,
         "P5": 3,
         "P6": 3,
         "P7": 2,
@@ -164,6 +174,7 @@ def moderado_answers():
     }
 
     subanswers = {
+        "2A": 2,
         "7A": 2,
         "8A": 2,
         "8B": 2,
@@ -217,11 +228,8 @@ def test_app_opens_without_error():
 
     rendered_text = get_rendered_text(at)
 
-    assert "Sistema de Apoio à Decisão para Classificação do Perfil do Investidor" in rendered_text
-    assert "Bloco 1 — Objetivos e tolerância ao risco" in rendered_text
-    assert "Bloco 2 — Compatibilidade financeira" in rendered_text
-    assert "Bloco 3 — Conhecimento e experiência" in rendered_text
-    assert "Geração do resultado" in rendered_text
+    assert "Objetivos e tolerância ao risco" in rendered_text
+    assert "Geração do resultado" not in rendered_text
 
 
 def test_generate_arrojado_result():
@@ -240,11 +248,17 @@ def test_generate_arrojado_result():
     assert result["preliminary_profile"] == "Arrojado"
     assert result["financial_profile"] == "Arrojado"
     assert result["final_profile"] == "Arrojado"
+    
+    assert "decision_trace" in result
+    assert result["decision_trace"]
+    assert result["decision_trace"][-1]["id"] == "resultado_final"
 
     rendered_text = get_rendered_text(at)
 
     assert "Resultado da classificação" in rendered_text
     assert "Perfil final: Arrojado" in rendered_text
+    assert "Percurso da decisão" in rendered_text
+    assert "Fluxograma do percurso decisório" in rendered_text
 
 
 def test_generate_moderado_result():
@@ -316,9 +330,9 @@ def test_new_simulation_clears_result_and_answers():
     assert at.session_state["result_signature"] is None
 
 
-def test_clear_answers_button_clears_state():
+def test_new_simulation_button_clears_state():
     """
-    Verifica se o botão Limpar respostas limpa respostas e resultado.
+    Verifica se o botão Nova simulação limpa respostas e resultado.
     """
 
     answers, subanswers = moderado_answers()
@@ -328,7 +342,7 @@ def test_clear_answers_button_clears_state():
 
     assert at.session_state["classification_result"] is not None
 
-    at = click_button(at, "Limpar respostas")
+    at = click_button(at, "Nova simulação")
 
     assert at.session_state["answers"] == {}
     assert at.session_state["subanswers"] == {}
@@ -337,14 +351,14 @@ def test_clear_answers_button_clears_state():
     assert at.session_state["result_signature"] is None
 
 
-def test_result_is_removed_when_answers_change_after_generation():
+def test_result_is_regenerated_when_answers_change_after_generation():
     """
-    Verifica se o resultado antigo desaparece quando as respostas mudam.
+    Verifica se o resultado é atualizado quando as respostas mudam
+    depois de uma classificação já gerada.
 
-    Neste teste, simulamos a alteração de uma resposta depois que o resultado
-    já foi gerado. Como os st.radio usam chaves dependentes do reset_counter,
-    incrementamos esse contador para forçar o AppTest a recriar os campos
-    na próxima execução.
+    Na versão sequencial atual, se o questionário já está finalizado
+    e as respostas continuam válidas, o app remove o resultado antigo
+    e gera uma nova classificação automaticamente.
     """
 
     answers, subanswers = arrojado_answers()
@@ -356,20 +370,18 @@ def test_result_is_removed_when_answers_change_after_generation():
     assert at.session_state["justification_result"] is not None
     assert at.session_state["result_signature"] is not None
 
+    old_signature = at.session_state["result_signature"]
+
     # Simula alteração de uma resposta principal depois do resultado gerado.
-    # P1 muda de 3 para 2.
     updated_answers = dict(at.session_state["answers"])
     updated_answers["P1"] = 2
     at.session_state["answers"] = updated_answers
 
-    # Em vez de tentar apagar as chaves internas dos radios,
-    # apenas incrementamos o contador usado pelo app.py para recriar os campos.
     at.session_state["reset_counter"] = at.session_state["reset_counter"] + 1
 
-    # Roda novamente o app.
-    # Como a assinatura das respostas mudou, o resultado antigo deve ser descartado.
     at.run(timeout=10)
 
-    assert at.session_state["classification_result"] is None
-    assert at.session_state["justification_result"] is None
-    assert at.session_state["result_signature"] is None
+    assert at.session_state["classification_result"] is not None
+    assert at.session_state["justification_result"] is not None
+    assert at.session_state["result_signature"] is not None
+    assert at.session_state["result_signature"] != old_signature

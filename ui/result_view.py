@@ -3,6 +3,7 @@ import streamlit as st
 
 # Importa a função que limpa a simulação atual.
 from utils.session import clear_simulation
+from logic.decision_trace import build_decision_flowchart
 
 
 def render_profile_badge(profile):
@@ -56,6 +57,33 @@ def render_adjustments(adjustments):
             )
 
 
+def format_decision_trace_table(decision_trace):
+    """
+    Converte o rastreamento da decisão em uma tabela amigável.
+
+    A tabela mostra como as respostas e eventos intermediários
+    influenciaram o caminho percorrido pela árvore de decisão.
+    """
+
+    rows = []
+
+    for item in decision_trace:
+        rows.append(
+            {
+                "Etapa": str(item.get("etapa", "")),
+                "Pergunta ou evento": str(item.get("pergunta_evento", "")),
+                "Resposta": str(item.get("resposta", "")),
+                "Efeito na árvore": str(item.get("efeito", "")),
+                "Perfil antes": str(item.get("perfil_antes") or "-"),
+                "Perfil depois": str(item.get("perfil_depois") or "-"),
+                "Nível antes": str(item.get("nivel_antes") or "-"),
+                "Nível depois": str(item.get("nivel_depois") or "-"),
+            }
+        )
+
+    return rows
+
+
 def render_result_section():
     """
     Exibe a tela de resultado quando já existe uma classificação gerada.
@@ -83,15 +111,44 @@ def render_result_section():
 
     st.subheader("Resumo da classificação")
 
-    st.write(f"**Perfil preliminar:** {preliminary_profile}")
-    st.write(f"**Após compatibilidade financeira:** {financial_profile}")
-    st.write(f"**Perfil final:** {final_profile}")
+    st.write(
+        f"O perfil inicialmente identificado foi **{preliminary_profile}**. "
+        f"Após a análise da situação financeira, a classificação passou para "
+        f"**{financial_profile}**. Ao final, considerando também conhecimento "
+        f"e experiência, o perfil resultante foi **{final_profile}**."
+    )
 
-    st.write("**Resumo textual:**")
     st.write(justification_result["summary"])
 
     st.subheader("Ajustes realizados")
     render_adjustments(classification_result.get("adjustments", []))
+
+    decision_trace = classification_result.get("decision_trace", [])
+
+    if decision_trace:
+        st.subheader("Percurso da decisão")
+
+        st.write(
+            "A tabela abaixo apresenta como as respostas e os eventos intermediários "
+            "influenciaram o caminho percorrido pela árvore de decisão até a classificação final."
+        )
+
+        trace_table = format_decision_trace_table(decision_trace)
+
+        st.dataframe(
+            trace_table,
+            width="stretch",
+            hide_index=True,
+        )
+        
+        st.write("**Fluxograma do percurso decisório:**")
+
+        decision_flowchart = build_decision_flowchart(decision_trace)
+
+        st.graphviz_chart(
+            decision_flowchart,
+            width="stretch",
+        )
 
     st.subheader("Travas, bloqueios e inconsistências")
 

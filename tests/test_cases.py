@@ -25,7 +25,7 @@ TEST_CASES = [
         "description": "Moderado claro",
         "answers": {
             "P1": 2, "P2": 2, "P3": 2,
-            "P4": 3, "P5": 3, "P6": 3,
+            "P4": 2, "P5": 3, "P6": 3,
             "P7": 2, "P8": 2, "P9": 2,
         },
         "subanswers": {
@@ -47,7 +47,7 @@ TEST_CASES = [
         "description": "Arrojado claro",
         "answers": {
             "P1": 3, "P2": 3, "P3": 3,
-            "P4": 3, "P5": 3, "P6": 3,
+            "P4": 2, "P5": 3, "P6": 3,
             "P7": 3, "P8": 3, "P9": 3,
         },
         "subanswers": {
@@ -67,7 +67,7 @@ TEST_CASES = [
         "description": "Arrojado preliminar reduzido para Moderado",
         "answers": {
             "P1": 3, "P2": 3, "P3": 3,
-            "P4": 2, "P5": 3, "P6": 3,
+            "P4": 1, "P5": 3, "P6": 3,
             "P7": 3, "P8": 3, "P9": 3,
         },
         "subanswers": {
@@ -130,7 +130,7 @@ TEST_CASES = [
 
     {
         "code": "T07",
-        "description": "Alta tolerância ao risco e alta necessidade de liquidez",
+        "description": "Alta tolerância ao risco com necessidade essencial de liquidez",
         "answers": {
             "P1": 3, "P2": 3, "P3": 3,
             "P4": 1, "P5": 3, "P6": 3,
@@ -143,18 +143,18 @@ TEST_CASES = [
         },
         "expected": {
             "preliminary": "Arrojado",
-            "financial": "Moderado",
-            "final": "Moderado",
+            "financial": "Conservador",
+            "final": "Conservador",
         },
         "validate": "conflito entre risco alto e liquidez curta"
     },
 
     {
         "code": "T08",
-        "description": "Longo prazo, mas baixa robustez financeira",
+        "description": "Longo prazo com ausência de reserva financeira suficiente",
         "answers": {
             "P1": 3, "P2": 3, "P3": 3,
-            "P4": 3, "P5": 2, "P6": 1,
+            "P4": 2, "P5": 2, "P6": 1,
             "P7": 3, "P8": 3, "P9": 2,
         },
         "subanswers": {
@@ -164,8 +164,8 @@ TEST_CASES = [
         },
         "expected": {
             "preliminary": "Arrojado",
-            "financial": "Moderado",
-            "final": "Moderado",
+            "financial": "Conservador",
+            "final": "Conservador",
         },
         "validate": "redução por baixa robustez financeira"
     },
@@ -175,7 +175,7 @@ TEST_CASES = [
         "description": "Busca de crescimento, mas baixo conhecimento/experiência",
         "answers": {
             "P1": 3, "P2": 3, "P3": 3,
-            "P4": 3, "P5": 3, "P6": 3,
+            "P4": 2, "P5": 3, "P6": 3,
             "P7": 1, "P8": 1, "P9": 1,
         },
         "subanswers": {},
@@ -192,7 +192,7 @@ TEST_CASES = [
         "description": "Ativação de subquestões condicionais",
         "answers": {
             "P1": 2, "P2": 2, "P3": 2,
-            "P4": 2, "P5": 1, "P6": 2,
+            "P4": 1, "P5": 1, "P6": 2,
             "P7": 3, "P8": 2, "P9": 2,
         },
         "subanswers": {
@@ -216,7 +216,7 @@ TEST_CASES = [
         "description": "Inconsistência entre finalidade, prazo e risco",
         "answers": {
             "P1": 1, "P2": 3, "P3": 3,
-            "P4": 3, "P5": 3, "P6": 3,
+            "P4": 2, "P5": 3, "P6": 3,
             "P7": 3, "P8": 3, "P9": 2,
         },
         "subanswers": {
@@ -236,7 +236,7 @@ TEST_CASES = [
         "description": "Validação da justificativa textual",
         "answers": {
             "P1": 3, "P2": 3, "P3": 3,
-            "P4": 3, "P5": 3, "P6": 3,
+            "P4": 2, "P5": 3, "P6": 3,
             "P7": 2, "P8": 2, "P9": 2,
         },
         "subanswers": {
