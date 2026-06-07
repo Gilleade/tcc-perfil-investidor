@@ -185,7 +185,7 @@ def _analyze_financial_answers(answers, subanswers):
     # P4 — Necessidade futura de recursos
     # ---------------------------------------------------------------
     #
-    # P4 = 1 indica necessidade do recurso em até 12 meses.
+    # P4 = 1 indica necessidade do recurso no curto prazo
     # Esse é um sinal prudencial forte, especialmente se a maior parte
     # do valor será usada ou se o uso está ligado a despesa essencial.
 
@@ -390,7 +390,7 @@ def _analyze_financial_answers(answers, subanswers):
 
     if p4 == 1 and p6 == 1:
         inconsistencies.append(
-            "Necessidade de uso do recurso em até 12 meses combinada com ausência de reserva suficiente."
+            "Necessidade de uso do recurso no curto prazo combinada com ausência de reserva suficiente."
         )
 
     if p4 == 1 and p5 == 1 and p6 in [1, 2]:

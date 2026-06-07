@@ -63,7 +63,7 @@ def _format_event_messages(events, empty_message):
     {
         "type": "trava_forte",
         "source": "P4",
-        "message": "Há necessidade declarada de utilizar o recurso em até 12 meses."
+        "message": "Há necessidade declarada de utilizar o recurso no curto prazo."
     }
     """
 

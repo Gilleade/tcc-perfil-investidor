@@ -156,7 +156,7 @@ def consolidate_final_profile(answers, subanswers):
           "P1": 3,
           "P2": 3,
           "P3": 3,
-          "P4": 3,
+          "P4": 2,
           "P5": 3,
           "P6": 3,
           "P7": 3,

@@ -430,8 +430,15 @@ def _define_knowledge_reduction_steps(current_profile, analysis):
     # Uma limitação forte reduz o perfil em um nível.
     # Exemplo: baixa familiaridade, baixa experiência ou compreensão inadequada de risco.
 
-    if limitation_count >= 1:
-        return 1, "Presença de limitação forte no eixo de conhecimento e experiência."
+    # Uma limitação forte no eixo de conhecimento impede perfil Arrojado,
+    # mas não deve reduzir automaticamente um perfil Moderado para Conservador.
+    if current_profile == PROFILE_ARROJADO and limitation_count >= 1:
+        return 1, "Presença de limitação forte no eixo de conhecimento e experiência, impedindo a manutenção de perfil Arrojado."
+
+    # Perfil Moderado só deve ser reduzido para Conservador quando houver
+    # baixa familiaridade combinada com baixa experiência prática.
+    if current_profile == PROFILE_MODERADO and has_low_familiarity and has_low_experience:
+        return 1, "Perfil Moderado limitado por baixa familiaridade combinada com baixa experiência prática."
 
     # Para perfil Arrojado, múltiplas moderações indicam que o conhecimento
     # e a experiência não confirmam suficientemente o perfil alto.

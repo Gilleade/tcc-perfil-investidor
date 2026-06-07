@@ -4,7 +4,7 @@
 # Elas aparecem apenas quando uma resposta de uma pergunta principal ativa um gatilho.
 #
 # Exemplo:
-# - Se o usuário responder P4 com alternativa 1 ou 2,
+# - Se o usuário responder P4 com alternativa 1,
 #   as subperguntas 4A e 4B poderão ser exibidas.
 #
 # Nesta etapa, este arquivo apenas CADASTRA as subperguntas.
@@ -61,7 +61,7 @@ SUBQUESTIONS = [
         "options": [
             {"id": 1, "label": "sim, comprometerá parte relevante do valor", "level": "uso_relevante"},
             {"id": 2, "label": "não, será apenas uma parte pequena", "level": "uso_parcial"},
-            {"id": 3, "label": "não sei informar com segurança", "level": "incerteza"},
+            {"id": 3, "label": "não, não comprometerá parte relevante do valor", "level": "uso_nao_relevante"}
         ],
 
         # A subpergunta 4A aparece quando P4 recebe resposta 1.
