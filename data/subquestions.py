@@ -12,6 +12,9 @@
 
 SUBQUESTIONS = [
     {
+        # Subpergunta demonstrativa mantida apenas como exemplo de possível refinamento futuro.
+        # Ela não é ativada automaticamente nesta versão do protótipo e não faz parte do fluxo principal.
+        
         # Identificador único da subpergunta.
         # O padrão segue a modelagem: 4A, 4B, 5A etc.
         "id": "1A",
