@@ -250,14 +250,21 @@ QUESTIONS = [
 
 
 def get_all_questions():
+    """Retorna todas as perguntas principais cadastradas."""
     return QUESTIONS
 
 
 def get_questions_by_block(block_id):
-    return [question for question in QUESTIONS if question["block_id"] == block_id]
+    """Retorna as perguntas principais de um bloco específico."""
+    return [
+        question
+        for question in QUESTIONS
+        if question["block_id"] == block_id
+    ]
 
 
 def get_question_by_id(question_id):
+    """Busca uma pergunta principal pelo identificador."""
     for question in QUESTIONS:
         if question["id"] == question_id:
             return question

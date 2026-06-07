@@ -108,34 +108,3 @@ def render_subquestion(subquestion):
     else:
         if subquestion_id in st.session_state.subanswers:
             del st.session_state.subanswers[subquestion_id]
-
-
-def render_question_block(block_id):
-    """
-    Exibe perguntas principais de um bloco e suas subperguntas ativadas.
-
-    Retorna:
-    - lista com ids das subperguntas que estão ativas.
-    """
-
-    active_subquestion_ids = []
-
-    for question in get_questions_by_block(block_id):
-        # Exibe a pergunta principal.
-        selected_option_id = render_question(question)
-
-        # Se a pergunta foi respondida, verifica subperguntas.
-        if selected_option_id is not None:
-            active_subquestions = get_active_subquestions(
-                question["id"],
-                selected_option_id
-            )
-
-            # Exibe as subperguntas ativadas.
-            for subquestion in active_subquestions:
-                active_subquestion_ids.append(subquestion["id"])
-                render_subquestion(subquestion)
-
-        st.divider()
-
-    return active_subquestion_ids

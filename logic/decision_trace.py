@@ -137,10 +137,10 @@ def _infer_direction_label(source_id, option_data):
         # ------------------------------------------------------------
 
         ("P4", "necessidade_curto_prazo"):
-            "Como esse valor pode ser necessário no curto prazo, o sistema entende que existe necessidade de liquidez e avalia com mais cautela a manutenção de perfis mais altos.",
+            "Como esse valor pode ser necessário para despesas, compromissos ou emergências no curto prazo, o sistema entende que existe dependência financeira do recurso e avalia com mais cautela a manutenção de perfis mais altos.",
 
         ("P4", "sem_necessidade_curto_prazo"):
-            "Como o valor não deve ser necessário no curto prazo, essa resposta reduz a pressão por liquidez e não cria limitação prudencial por esse critério.",
+            "Como o valor não deve ser necessário para despesas, compromissos ou emergências no curto prazo, essa resposta reduz a pressão por liquidez e não cria limitação prudencial por esse critério.",
 
         ("4A", "uso_relevante"):
             "Como a necessidade prevista pode comprometer parte relevante do valor, o sistema interpreta que o investimento tem menor liberdade para suportar oscilações.",
@@ -148,8 +148,8 @@ def _infer_direction_label(source_id, option_data):
         ("4A", "uso_parcial"):
             "Como a necessidade prevista envolve apenas uma parte pequena do valor, o sistema considera a restrição de liquidez menos severa.",
 
-        ("4A", "incerteza"):
-            "Como não há segurança sobre quanto do valor pode ser necessário, o sistema mantém atenção moderada sobre a liquidez.",
+        ("4A", "uso_nao_relevante"):
+            "Como a necessidade prevista não compromete parte relevante do valor, essa resposta não acrescenta restrição financeira importante por esse critério.",
 
         ("4B", "liquidez_essencial"):
             "Como o uso futuro está ligado a despesas essenciais, o sistema interpreta maior dependência do recurso e aplica uma leitura mais prudente.",
@@ -449,7 +449,7 @@ def build_decision_trace(
         "P4",
         answers,
         "Situação financeira",
-        "Verifica se o valor pode ser necessário no curto prazo.",
+        "Verifica dependência financeira do valor e possível necessidade de liquidez no curto prazo.",
     )
 
     _add_subquestion_trace(
@@ -633,6 +633,7 @@ def build_decision_trace(
 
     return trace
 
+
 def _escape_dot_text(value):
     """
     Prepara textos para uso seguro em labels do Graphviz/DOT.
@@ -676,7 +677,7 @@ def build_decision_flowchart(decision_trace):
     lines = [
         "digraph decision_path {",
         "    rankdir=TB;",
-        '    graph [fontsize=10, labelloc="t", label="Percurso da árvore de decisão"];',
+        '    graph [fontsize=10, labelloc="t", label="Percurso lógico da classificação"];',
         '    node [shape=box, style="rounded", fontsize=10];',
         '    edge [fontsize=9];',
     ]

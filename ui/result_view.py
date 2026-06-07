@@ -163,9 +163,9 @@ def render_decision_tree_path(classification_result):
     st.subheader("Como cada resposta influenciou o resultado")
 
     st.write(
-        "Abaixo, o sistema apresenta o caminho percorrido na árvore de decisão. "
+        "Abaixo, o sistema apresenta o percurso lógico da classificação. "
         "Cada pergunta mostra a resposta registrada, a interpretação lógica dessa escolha "
-        "e o efeito que ela produziu na classificação."
+        "e o efeito que ela produziu no resultado."
     )
 
     objectives_items = [
@@ -232,7 +232,7 @@ def render_decision_tree_path(classification_result):
 
     _render_tree_block(
         title="4. Consolidação do resultado final",
-        description="Síntese do percurso realizado ao longo da árvore de decisão.",
+        description="Síntese do percurso lógico realizado até a classificação final.",
         items=final_items,
         footer_label="Perfil final",
         footer_value=final_profile,

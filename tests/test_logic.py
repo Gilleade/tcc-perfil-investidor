@@ -54,16 +54,25 @@ class TestFinancialCompatibility(unittest.TestCase):
         self.assertEqual(result["profile"], "Arrojado")
         self.assertEqual(result["reduction_steps"], 0)
 
-    def test_financial_reduces_arrojado_to_moderado_by_strong_lock(self):
+    def test_financial_reduces_arrojado_to_moderado_by_planned_liquidity(self):
         result = apply_financial_compatibility(
             "Arrojado",
             {"P4": 1, "P5": 3, "P6": 3},
-            {}
+            {"4A": 2, "4B": 3}
         )
 
         self.assertEqual(result["profile"], "Moderado")
         self.assertEqual(result["reduction_steps"], 1)
-        self.assertIn("Arrojado", result["blocked_profiles"])
+        
+    def test_financial_keeps_arrojado_when_liquidity_is_not_relevant(self):
+        result = apply_financial_compatibility(
+            "Arrojado",
+            {"P4": 1, "P5": 3, "P6": 3},
+            {"4A": 3, "4B": 3}
+        )
+
+        self.assertEqual(result["profile"], "Arrojado")
+        self.assertEqual(result["reduction_steps"], 0)
 
     def test_financial_reduces_arrojado_to_conservador_by_fragility(self):
         result = apply_financial_compatibility(

@@ -185,36 +185,30 @@ def _analyze_financial_answers(answers, subanswers):
     # P4 — Necessidade futura de recursos
     # ---------------------------------------------------------------
     #
-    # P4 = 1 indica necessidade do recurso no curto prazo
-    # Esse é um sinal prudencial forte, especialmente se a maior parte
-    # do valor será usada ou se o uso está ligado a despesa essencial.
+    # P4 = 1 indica possível necessidade do recurso no curto prazo.
+    # A intensidade da restrição é definida principalmente pelas subperguntas 4A e 4B.
 
-    if p4 == 1:
-        # Se o usuário pode precisar do valor no curto prazo,
-        # mas possui renda estável e reserva suficiente,
-        # a situação financeira limita o perfil máximo a Moderado,
-        # em vez de reduzir diretamente para Conservador.
-        if p5 == 3 and p6 == 3:
-            _add_event(
-                moderations,
-                "moderacao",
-                "P4",
-                "Há possibilidade de necessidade do valor no curto prazo, mas a renda estável e a reserva suficiente permitem limitar o perfil a Moderado."
-            )
+    if p4 == 1 and (p5 == 1 or p6 == 1):
+        _add_event(
+            strong_locks,
+            "trava_forte",
+            "P4",
+            "Há possibilidade de necessidade do valor no curto prazo combinada com fragilidade de renda ou ausência de reserva suficiente."
+        )
 
-            if PROFILE_ARROJADO not in blocked_profiles:
-                blocked_profiles.append(PROFILE_ARROJADO)
+        if PROFILE_ARROJADO not in blocked_profiles:
+            blocked_profiles.append(PROFILE_ARROJADO)
 
-        else:
-            _add_event(
-                strong_locks,
-                "trava_forte",
-                "P4",
-                "Há possibilidade de necessidade do valor no curto prazo sem robustez financeira suficiente."
-            )
+    elif p4 == 1 and (p5 == 2 or p6 == 2):
+        _add_event(
+            moderations,
+            "moderacao",
+            "P4",
+            "Há possibilidade de necessidade do valor no curto prazo combinada com renda ou reserva apenas parcialmente adequada."
+        )
 
-            if PROFILE_ARROJADO not in blocked_profiles:
-                blocked_profiles.append(PROFILE_ARROJADO)
+        if PROFILE_ARROJADO not in blocked_profiles:
+            blocked_profiles.append(PROFILE_ARROJADO)
 
     # Subpergunta 4A: uso relevante da maior parte do valor.
     if sub_4a == 1:
@@ -228,12 +222,12 @@ def _analyze_financial_answers(answers, subanswers):
         if PROFILE_ARROJADO not in blocked_profiles:
             blocked_profiles.append(PROFILE_ARROJADO)
 
-    elif sub_4a in [2, 3]:
+    elif sub_4a == 2:
         _add_event(
             moderations,
             "moderacao",
             "4A",
-            "A necessidade futura não foi caracterizada como totalmente livre de restrição."
+            "A necessidade futura comprometerá apenas parte pequena do valor investido."
         )
 
     # Subpergunta 4B: tipo de uso futuro do recurso.
@@ -257,12 +251,7 @@ def _analyze_financial_answers(answers, subanswers):
         )
 
     elif sub_4b == 3:
-        _add_event(
-            moderations,
-            "moderacao",
-            "4B",
-            "O uso futuro foi indicado como conveniência eventual, gerando apenas moderação leve."
-        )
+        pass
 
     # ---------------------------------------------------------------
     # P5 — Estabilidade de renda
@@ -487,10 +476,16 @@ def _define_financial_limit_profile(answers, subanswers, analysis):
     # O perfil máximo passa a ser Moderado quando há restrições financeiras
     # relevantes, mas não suficientes para caracterizar fragilidade severa.
 
-    if p4 == 1:
+    if sub_4a == 2 or sub_4b == 2:
         return (
             PROFILE_MODERADO,
-            "Possibilidade de necessidade do valor no curto prazo, com condição financeira suficiente para evitar classificação conservadora."
+            "Necessidade do valor no curto prazo associada a uso parcial ou compromisso planejado."
+        )
+
+    if p4 == 1 and (p5 == 2 or p6 == 2):
+        return (
+            PROFILE_MODERADO,
+            "Possibilidade de necessidade do valor no curto prazo combinada com renda ou reserva parcialmente adequada."
         )
 
     if p5 == 2 or p6 == 2:
