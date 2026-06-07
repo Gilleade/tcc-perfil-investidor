@@ -1,13 +1,6 @@
 # Importa o Streamlit para renderizar perguntas e elementos visuais.
 import streamlit as st
 
-# Importa as perguntas principais cadastradas no sistema.
-from data.questions import get_questions_by_block
-
-# Importa a função que identifica quais subperguntas devem ser ativadas.
-from data.subquestions import get_active_subquestions
-
-
 def get_selected_index(options, current_answer_id):
     """
     Retorna o índice da alternativa previamente selecionada.
