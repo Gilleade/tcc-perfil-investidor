@@ -132,15 +132,6 @@ def _infer_direction_label(source_id, option_data):
         ("P3", "arrojado"):
             "A aceitação de oscilações elevadas indica maior tolerância a risco, aproximando a etapa inicial do perfil Arrojado.",
 
-        ("2A", "prazo_curto_critico"):
-            "Como a maior parte do valor pode ser necessária em prazo curto, o sistema interpreta maior necessidade de liquidez.",
-
-        ("2A", "prazo_curto_parcial"):
-            "Como apenas uma pequena parte do valor pode ser necessária, o prazo informado gera atenção, mas com menor impacto sobre a classificação.",
-
-        ("2A", "incerteza"):
-            "Como ainda não há segurança sobre o valor que poderá ser usado, o sistema mantém essa informação como ponto de atenção.",
-
         # ------------------------------------------------------------
         # Bloco 2 — Situação financeira
         # ------------------------------------------------------------
@@ -427,14 +418,6 @@ def build_decision_trace(
         answers,
         "Objetivos",
         "Contribui para identificar o horizonte temporal planejado.",
-    )
-
-    _add_subquestion_trace(
-        trace,
-        "2A",
-        subanswers,
-        "Objetivos",
-        "Refina a interpretação do horizonte temporal informado.",
     )
 
     _add_question_trace(

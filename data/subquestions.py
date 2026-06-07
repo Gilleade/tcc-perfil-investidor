@@ -13,7 +13,7 @@
 SUBQUESTIONS = [
     {
         # Identificador único da subpergunta.
-        # O padrão segue a modelagem: 2A, 4A, 4B, 5A etc.
+        # O padrão segue a modelagem: 4A, 4B, 5A etc.
         "id": "1A",
 
         # Pergunta principal de origem.
@@ -49,24 +49,6 @@ SUBQUESTIONS = [
 
         # Indica se a subpergunta está ativa automaticamente nesta versão.
         "auto_activate": False,
-    },
-    {
-        "id": "2A",
-        "parent_question_id": "P2",
-        "text": "Esse prazo se refere ao uso da maior parte do valor investido ou apenas de uma parcela pequena?",
-        "type": "single_choice",
-        "options": [
-            {"id": 1, "label": "pretendo usar a maior parte do valor", "level": "prazo_curto_critico"},
-            {"id": 2, "label": "pretendo usar apenas uma parcela pequena", "level": "prazo_curto_parcial"},
-            {"id": 3, "label": "ainda não tenho certeza sobre o valor que será usado", "level": "incerteza"},
-        ],
-
-        # A subpergunta 2A aparece quando P2 recebe resposta 1 ou 2.
-        # P2 = horizonte temporal.
-        "trigger_option_ids": [1, 2],
-        "logical_function": "Reduzir incerteza",
-        "purpose": "Diferenciar prazo curto crítico de prazo curto parcial",
-        "auto_activate": True,
     },
     {
         "id": "4A",

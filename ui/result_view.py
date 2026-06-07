@@ -170,7 +170,7 @@ def render_decision_tree_path(classification_result):
 
     objectives_items = [
         item for item in _get_trace_items_by_stage(decision_trace, "Objetivos")
-        if item.get("id") in ["P1", "P2", "2A", "P3"]
+        if item.get("id") in ["P1", "P2", "P3"]
     ]
 
     financial_items = [

@@ -174,7 +174,6 @@ def moderado_answers():
     }
 
     subanswers = {
-        "2A": 2,
         "7A": 2,
         "8A": 2,
         "8B": 2,

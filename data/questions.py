@@ -35,7 +35,7 @@ QUESTIONS = [
         "criterion": "Horizonte temporal",
         "logical_function": "Formação do perfil preliminar",
         "logical_weight": "Nuclear",
-        "text": "Por quanto tempo você pretende manter esse investimento antes de precisar resgatar a maior parte do valor?",
+        "text": "Por quanto tempo você pretende manter esse investimento aplicado?",
         "type": "single_choice",
         "options": [
             {
@@ -91,7 +91,7 @@ QUESTIONS = [
         "criterion": "Necessidade futura de recursos",
         "logical_function": "Limite prudencial de compatibilidade financeira",
         "logical_weight": "Limite prudencial",
-        "text": "Esse valor pode ser necessário no curto prazo para cobrir despesas ou imprevistos?",
+        "text": "Esse valor pode ser necessário no curto prazo para cobrir despesas, compromissos ou emergências?",
         "type": "single_choice",
         "options": [
             {
