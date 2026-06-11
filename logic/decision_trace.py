@@ -2,12 +2,12 @@
 Módulo responsável por montar o rastreamento do caminho decisório.
 
 O decision_trace registra, em ordem lógica, como as respostas do usuário
-percorreram a árvore de decisão até chegar ao perfil final.
+foram processadas até chegar ao perfil final.
 
 Esse rastreamento será usado posteriormente para:
 - tabela explicativa pergunta por pergunta;
 - fluxograma visual do percurso;
-- explicação acadêmica da árvore de decisão.
+- explicação acadêmica do modelo baseado em regras.
 """
 
 from data.questions import QUESTIONS
@@ -90,7 +90,7 @@ def _infer_direction_label(source_id, option_data):
     """
     Define a interpretação visual exibida na tela de resultado.
 
-    Essa função não altera a lógica da árvore.
+    Essa função não altera a lógica de classificação.
     Ela apenas traduz a alternativa escolhida em uma explicação
     mais compreensível para o usuário.
     """
@@ -384,7 +384,7 @@ def build_decision_trace(
     final_profile,
 ):
     """
-    Monta o rastreamento completo da árvore de decisão.
+    Monta o rastreamento completo do processamento decisório.
 
     Parâmetros:
     - answers: respostas das perguntas principais.

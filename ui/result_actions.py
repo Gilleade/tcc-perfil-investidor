@@ -1,7 +1,7 @@
 # Importa o Streamlit para renderizar elementos da interface.
 import streamlit as st
 
-# Importa a função que executa toda a sequência lógica da árvore.
+# Importa a função que executa toda a sequência lógica baseada em regras.
 from logic.final_consolidation import consolidate_final_profile
 
 # Importa a função que gera a justificativa textual do resultado.
@@ -19,7 +19,7 @@ def generate_and_store_result():
     Gera o resultado da classificação e salva no estado da sessão.
 
     Esta função não renderiza botão.
-    Ela apenas executa a lógica da árvore, gera a justificativa
+    Ela apenas executa a lógica baseada em regras, gera a justificativa
     e armazena os dados para a tela de resultado.
     """
 

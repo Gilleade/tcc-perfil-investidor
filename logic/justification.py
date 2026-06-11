@@ -289,12 +289,12 @@ def _build_final_section(consolidated_result):
 
     if total_reduction_steps > 0:
         lines.append(
-            f"A classificação sofreu redução total de {_format_levels(total_reduction_steps)} ao longo da árvore, "
+            f"A classificação sofreu redução total de {_format_levels(total_reduction_steps)} ao longo do processamento por regras, "
             "em razão de travas, moderações ou limitações identificadas."
         )
     else:
         lines.append(
-            "A classificação não sofreu redução ao longo da árvore, pois os blocos posteriores confirmaram "
+            "A classificação não sofreu redução ao longo do processamento por regras, pois os blocos posteriores confirmaram "
             "a coerência do perfil preliminar."
         )
 
