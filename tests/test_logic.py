@@ -1,7 +1,7 @@
 # Testes automatizados da lógica do protótipo.
 #
 # Estes testes não avaliam a interface Streamlit.
-# Eles testam apenas as funções de regra da árvore de decisão.
+# Eles testam apenas as funções do modelo de classificação baseado em regras.
 #
 # Para executar:
 # python -m unittest discover -s tests -v
@@ -133,7 +133,7 @@ class TestKnowledgeRefinement(unittest.TestCase):
 
 class TestFinalConsolidation(unittest.TestCase):
     """
-    Testa a consolidação completa da árvore.
+    Testa a consolidação completa da classificação.
     """
 
     def test_final_arrojado_full_compatibility(self):

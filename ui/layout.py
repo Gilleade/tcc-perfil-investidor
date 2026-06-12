@@ -103,58 +103,6 @@ def apply_custom_styles():
                 font-size: 1rem;
             }
             
-            .tree-block {
-                margin-top: 1.4rem;
-                padding: 1.05rem 1.15rem;
-                border-radius: 0.85rem;
-                border: 1px solid rgba(128, 128, 128, 0.22);
-                background: rgba(128, 128, 128, 0.08);
-            }
-
-            .tree-block-title {
-                font-size: 1.08rem;
-                font-weight: 700;
-                margin-bottom: 0.35rem;
-            }
-
-            .tree-block-description {
-                opacity: 0.84;
-                line-height: 1.5;
-            }
-
-            .tree-step {
-                margin: 0.9rem 0;
-                padding: 0.9rem 1rem;
-                border-radius: 0.8rem;
-                border: 1px solid rgba(128, 128, 128, 0.16);
-                background: rgba(128, 128, 128, 0.04);
-            }
-
-            .tree-line {
-                line-height: 1.55;
-                padding: 0.08rem 0;
-            }
-
-            .tree-line-1 {
-                font-weight: 600;
-                margin-left: 0rem;
-            }
-
-            .tree-line-2 {
-                margin-left: 1.2rem;
-            }
-
-            .tree-line-3 {
-                margin-left: 2.4rem;
-                opacity: 0.86;
-            }
-
-            .tree-block-footer {
-                margin-top: 0.85rem;
-                padding: 0.8rem 1rem;
-                border-radius: 0.75rem;
-                background: rgba(128, 128, 128, 0.12);
-            }
         </style>
         """,
         unsafe_allow_html=True

@@ -33,7 +33,7 @@ def initialize_session_state():
         st.session_state.reset_counter = 0
 
     if "classification_result" not in st.session_state:
-        # Guarda o resultado consolidado da árvore quando o usuário gera o resultado.
+        # Guarda o resultado consolidado da classificação quando o usuário gera o resultado.
         st.session_state.classification_result = None
 
     if "justification_result" not in st.session_state:

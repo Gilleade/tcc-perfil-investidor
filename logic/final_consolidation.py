@@ -14,7 +14,7 @@ def _combine_logs(*results):
     """
     Junta os registros lógicos das etapas executadas.
 
-    Cada etapa da árvore retorna uma lista chamada "log".
+    Cada etapa do processamento retorna uma lista chamada "log".
     Esta função une todos esses logs em uma única lista.
 
     Exemplo:
@@ -36,7 +36,7 @@ def _combine_logs(*results):
 
 def _combine_inconsistencies(*results):
     """
-    Junta inconsistências identificadas nas etapas da árvore.
+    Junta inconsistências identificadas nas etapas do processamento.
 
     Algumas etapas podem identificar conflitos ou pontos de atenção.
     Exemplo:

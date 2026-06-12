@@ -284,7 +284,7 @@ def calculate_preliminary_profile(answers):
     # Essas inconsistências poderão ser usadas depois na justificativa final.
     if inconsistencies:
         logical_log.append(
-            "Foram identificadas combinações preliminares que exigem atenção nas etapas posteriores da árvore."
+            "Foram identificadas combinações preliminares que exigem atenção nas etapas posteriores da classificação."
         )
 
     return {
