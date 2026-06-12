@@ -156,7 +156,7 @@ O arquivo `run_test_cases.py` executa os casos simulados e gera uma síntese dos
 
 O funcionamento do protótipo segue uma sequência organizada em entrada, processamento e saída.
 
-Na etapa de entrada, o usuário responde às perguntas principais e, quando necessário, às subperguntas condicionais. As subperguntas são exibidas apenas quando uma resposta anterior ativa determinado gatilho.
+Na etapa de entrada, o usuário responde ao instrumento em fluxo sequencial, visualizando uma pergunta ou subpergunta por vez. As perguntas principais sempre compõem o fluxo, enquanto as subperguntas condicionais são inseridas apenas quando uma resposta anterior ativa o gatilho correspondente.
 
 Na etapa de processamento, o sistema valida o preenchimento e aplica as regras de classificação. Primeiro, calcula o perfil preliminar a partir dos objetivos e da tolerância ao risco. Em seguida, verifica a compatibilidade financeira e define limites para a classificação. Depois, aplica o refinamento por conhecimento e experiência. Por fim, consolida o perfil final.
 

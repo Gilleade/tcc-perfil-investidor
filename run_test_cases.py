@@ -46,7 +46,7 @@ def build_console_block(case, consolidated, justification, comparison):
         "Perfis bloqueados:",
         json.dumps(consolidated.get("blocked_profiles", []), ensure_ascii=False),
         "Ajustes:",
-        json.dumps(consolidated.get("adjustments_summary", []), ensure_ascii=False, indent=2),
+        json.dumps(consolidated.get("adjustments", []), ensure_ascii=False, indent=2),
         "Justificativa completa:",
         justification["full_text"],
         "",
