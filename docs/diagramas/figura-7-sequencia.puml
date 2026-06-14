@@ -1,0 +1,67 @@
+@startuml
+Diagrama de sequência da classificação do perfil
+
+autonumber
+
+actor Usuário as U
+boundary "Interface" as I
+control "Base de perguntas" as B
+control "Validação" as V
+control "Regras de classificação" as R
+control "Consolidação do perfil" as C
+control "Geração da justificativa" as J
+
+U -> I: Iniciar classificação
+I -> B: Solicitar perguntas do Bloco 1
+B --> I: Retornar P1, P2 e P3
+I --> U: Exibir Bloco 1
+U -> I: Enviar respostas do Bloco 1
+I -> V: Validar respostas
+V --> I: Respostas válidas
+
+I -> R: Calcular perfil preliminar
+R --> I: Perfil preliminar
+
+I -> B: Solicitar perguntas do Bloco 2
+B --> I: Retornar P4, P5 e P6
+I --> U: Exibir Bloco 2
+U -> I: Enviar respostas do Bloco 2
+I -> B: Verificar gatilhos financeiros
+
+alt Há subpergunta financeira
+    B --> I: Retornar subpergunta(s)
+    I --> U: Exibir subpergunta(s)
+    U -> I: Enviar resposta(s) complementar(es)
+end
+
+I -> V: Validar respostas do Bloco 2
+V --> I: Respostas válidas
+I -> R: Definir limite financeiro
+R --> I: Limite financeiro
+
+I -> B: Solicitar perguntas do Bloco 3
+B --> I: Retornar P7, P8 e P9
+I --> U: Exibir Bloco 3
+U -> I: Enviar respostas do Bloco 3
+I -> B: Verificar gatilhos de conhecimento e experiência
+
+alt Há subpergunta de conhecimento ou experiência
+    B --> I: Retornar subpergunta(s)
+    I --> U: Exibir subpergunta(s)
+    U -> I: Enviar resposta(s) complementar(es)
+end
+
+I -> V: Validar respostas do Bloco 3
+V --> I: Respostas válidas
+I -> R: Definir limite por conhecimento e experiência
+R --> I: Limite por conhecimento e experiência
+
+I -> C: Consolidar perfil preliminar e limites
+C --> I: Perfil final
+
+I -> J: Gerar justificativa textual
+J --> I: Justificativa do resultado
+
+I --> U: Exibir perfil final e justificativa
+
+@enduml
