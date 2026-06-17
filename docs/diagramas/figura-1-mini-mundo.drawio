@@ -1,25 +1,25 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Figura 1 - Visao geral do minimundo" id="0">
-    <mxGraphModel dx="1414" dy="743" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="1288" dy="659" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1" value="Visão geral do minimundo do protótipo" vertex="1">
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" value="Visão geral do minimundo do protótipo" vertex="1">
           <mxGeometry height="40" width="600" x="285" y="40" as="geometry" />
         </mxCell>
-        <mxCell id="user" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;arcSize=16;fillColor=#eeeeee;strokeColor=#36393d;" value="Usuário" vertex="1">
+        <mxCell id="user" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=20;fontStyle=1;arcSize=16;fillColor=#eeeeee;strokeColor=#36393d;" value="Usuário" vertex="1">
           <mxGeometry height="60" width="300" x="435" y="110" as="geometry" />
         </mxCell>
-        <mxCell id="instrument" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;arcSize=16;fillColor=#eeeeee;strokeColor=#36393d;" value="Instrumento de classificação&lt;br&gt;&lt;font style=&quot;font-size: 12px&quot;&gt;Perguntas principais e subperguntas condicionais&lt;/font&gt;" vertex="1">
+        <mxCell id="instrument" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=20;fontStyle=1;arcSize=16;fillColor=#eeeeee;strokeColor=#36393d;" value="Instrumento de classificação&lt;br&gt;&lt;font&gt;Perguntas principais e subperguntas condicionais&lt;/font&gt;" vertex="1">
           <mxGeometry height="80" width="400" x="385" y="220" as="geometry" />
         </mxCell>
-        <mxCell id="answers" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;arcSize=16;fillColor=#eeeeee;strokeColor=#36393d;" value="Respostas fornecidas&lt;br&gt;&lt;font style=&quot;font-size: 12px&quot;&gt;Entradas utilizadas pelo sistema&lt;/font&gt;" vertex="1">
+        <mxCell id="answers" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=20;fontStyle=1;arcSize=16;fillColor=#eeeeee;strokeColor=#36393d;" value="Respostas fornecidas&lt;br&gt;&lt;font&gt;Entradas utilizadas pelo sistema&lt;/font&gt;" vertex="1">
           <mxGeometry height="80" width="400" x="385" y="350" as="geometry" />
         </mxCell>
-        <mxCell id="rules" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;arcSize=16;fillColor=#eeeeee;strokeColor=#36393d;" value="Regras de processamento&lt;br&gt;&lt;font style=&quot;font-size: 12px&quot;&gt;Perfil preliminar, limites e refinamentos&lt;/font&gt;" vertex="1">
+        <mxCell id="rules" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=20;fontStyle=1;arcSize=16;fillColor=#eeeeee;strokeColor=#36393d;" value="Regras de processamento&lt;br&gt;&lt;font&gt;Perfil preliminar, limites e refinamentos&lt;/font&gt;" vertex="1">
           <mxGeometry height="80" width="400" x="385" y="480" as="geometry" />
         </mxCell>
-        <mxCell id="result" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;arcSize=16;fillColor=#eeeeee;strokeColor=#36393d;" value="Perfil final + justificativa textual" vertex="1">
+        <mxCell id="result" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=20;fontStyle=1;arcSize=16;fillColor=#eeeeee;strokeColor=#36393d;" value="Perfil final + justificativa textual" vertex="1">
           <mxGeometry height="70" width="400" x="385" y="610" as="geometry" />
         </mxCell>
         <mxCell id="edge1" edge="1" parent="1" source="user" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#36393d;fillColor=#eeeeee;" target="instrument" value="">

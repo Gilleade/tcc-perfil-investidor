@@ -1,56 +1,60 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Figura 6 - Diagrama de componentes revisado" id="0">
-    <mxGraphModel dx="896" dy="458" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="1585" dy="811" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=18;fontStyle=1" value="Diagrama de componentes do protótipo" vertex="1">
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=20;fontStyle=1" value="Diagrama de componentes do protótipo" vertex="1">
           <mxGeometry height="40" width="700" x="250" y="25" as="geometry" />
         </mxCell>
-        <mxCell id="presentation" parent="1" style="swimlane;html=1;rounded=1;startSize=30;horizontal=1;fillColor=#EAF2F8;strokeColor=#2F5597;fontStyle=1;fontSize=14;" value="CAMADA DE APRESENTAÇÃO" vertex="1">
+        <mxCell id="presentation" parent="1" style="swimlane;html=1;rounded=1;startSize=30;horizontal=1;fillColor=#EAF2F8;strokeColor=#2F5597;fontStyle=1;fontSize=20;" value="CAMADA DE APRESENTAÇÃO" vertex="1">
           <mxGeometry height="130" width="700" x="230" y="90" as="geometry" />
         </mxCell>
-        <mxCell id="ui" parent="presentation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2F5597;fontSize=14;fontStyle=1;" value="Interface Streamlit&lt;br&gt;&lt;font style=&quot;font-size: 12px&quot;&gt;Apresenta perguntas, coleta respostas e exibe o resultado&lt;/font&gt;" vertex="1">
+        <mxCell id="ui" parent="presentation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2F5597;fontSize=19;fontStyle=1;" value="Interface Streamlit&lt;br&gt;&lt;font&gt;Apresenta perguntas, coleta respostas e exibe o resultado&lt;/font&gt;" vertex="1">
           <mxGeometry height="65" width="350" x="175" y="45" as="geometry" />
         </mxCell>
-        <mxCell id="input" parent="1" style="swimlane;html=1;rounded=1;startSize=30;horizontal=1;fillColor=#FFF7E6;strokeColor=#B36B00;fontStyle=1;fontSize=14;" value="CAMADA DE ENTRADA E CONTROLE" vertex="1">
+        <mxCell id="input" parent="1" style="swimlane;html=1;rounded=1;startSize=30;horizontal=1;fillColor=#FFF7E6;strokeColor=#B36B00;fontStyle=1;fontSize=20;" value="CAMADA DE ENTRADA E CONTROLE" vertex="1">
           <mxGeometry height="175" width="900" x="130" y="260" as="geometry" />
         </mxCell>
-        <mxCell id="questions" parent="input" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#B36B00;fontSize=14;fontStyle=1;" value="Base de perguntas&lt;br&gt;&lt;font style=&quot;font-size: 12px&quot;&gt;Blocos, perguntas, alternativas e tendências&lt;/font&gt;" vertex="1">
+        <mxCell id="questions" parent="input" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#B36B00;fontSize=20;fontStyle=1;" value="Base de perguntas&lt;br&gt;&lt;font&gt;Blocos, perguntas, alternativas e tendências&lt;/font&gt;" vertex="1">
           <mxGeometry height="80" width="245" x="45" y="55" as="geometry" />
         </mxCell>
-        <mxCell id="subq" parent="input" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#B36B00;fontSize=14;fontStyle=1;" value="Controle de subperguntas&lt;br&gt;&lt;font style=&quot;font-size: 12px&quot;&gt;Verifica gatilhos e ativa detalhamentos&lt;/font&gt;" vertex="1">
+        <mxCell id="subq" parent="input" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#B36B00;fontSize=19;fontStyle=1;" value="Controle de subperguntas&lt;br&gt;&lt;font&gt;Verifica gatilhos e ativa detalhamentos&lt;/font&gt;" vertex="1">
           <mxGeometry height="80" width="245" x="330" y="55" as="geometry" />
         </mxCell>
-        <mxCell id="validation" parent="input" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#B36B00;fontSize=14;fontStyle=1;" value="Validação de respostas&lt;br&gt;&lt;font style=&quot;font-size: 12px&quot;&gt;Confere perguntas obrigatórias e consistência do preenchimento&lt;/font&gt;" vertex="1">
+        <mxCell id="validation" parent="input" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#B36B00;fontSize=17;fontStyle=1;" value="Validação de respostas&lt;br&gt;&lt;font&gt;Confere perguntas obrigatórias e consistência do preenchimento&lt;/font&gt;" vertex="1">
           <mxGeometry height="80" width="245" x="615" y="55" as="geometry" />
         </mxCell>
-        <mxCell id="e2" edge="1" parent="input" source="questions" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=11;" target="subq" value="verifica gatilhos">
-          <mxGeometry relative="1" y="15" as="geometry">
+        <mxCell id="e2" edge="1" parent="input" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=16;entryX=0.042;entryY=0.007;entryDx=0;entryDy=0;entryPerimeter=0;labelBackgroundColor=none;" target="subq" value="verifica gatilhos">
+          <mxGeometry relative="1" x="0.3307" y="16" as="geometry">
             <mxPoint as="offset" />
+            <mxPoint x="280" y="56" as="sourcePoint" />
+            <mxPoint x="330" y="55" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e3" edge="1" parent="input" source="subq" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=11;" target="validation" value="encaminha respostas">
+        <mxCell id="e3" edge="1" parent="input" source="subq" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=16;exitX=0.976;exitY=0.018;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.034;entryY=0.013;entryDx=0;entryDy=0;entryPerimeter=0;labelBackgroundColor=none;" target="validation" value="encaminha respostas">
           <mxGeometry relative="1" x="0.25" y="15" as="geometry">
             <mxPoint as="offset" />
+            <mxPoint x="575.0000000000002" y="67.08955223880594" as="sourcePoint" />
+            <mxPoint x="620" y="55" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="business" parent="1" style="swimlane;html=1;rounded=1;startSize=30;horizontal=1;fillColor=#EAF7EA;strokeColor=#38761D;fontStyle=1;fontSize=14;" value="CAMADA DE REGRAS DE NEGÓCIO" vertex="1">
-          <mxGeometry height="210" width="980" x="90" y="485" as="geometry" />
+        <mxCell id="business" parent="1" style="swimlane;html=1;rounded=1;startSize=30;horizontal=1;fillColor=#EAF7EA;strokeColor=#38761D;fontStyle=1;fontSize=20;" value="CAMADA DE REGRAS DE NEGÓCIO" vertex="1">
+          <mxGeometry height="210" width="980" x="94" y="470" as="geometry" />
         </mxCell>
-        <mxCell id="b1" parent="business" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=14;fontStyle=1;" value="Regras do Bloco 1&lt;br&gt;&lt;font style=&quot;font-size: 12px&quot;&gt;Perfil preliminar&lt;/font&gt;" vertex="1">
+        <mxCell id="b1" parent="business" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=20;fontStyle=1;" value="Regras do Bloco 1&lt;br&gt;&lt;font&gt;Perfil preliminar&lt;/font&gt;" vertex="1">
           <mxGeometry height="75" width="205" x="40" y="55" as="geometry" />
         </mxCell>
-        <mxCell id="b2" parent="business" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=14;fontStyle=1;" value="Regras do Bloco 2&lt;br&gt;&lt;font style=&quot;font-size: 12px&quot;&gt;Limite financeiro&lt;/font&gt;" vertex="1">
+        <mxCell id="b2" parent="business" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=14;fontStyle=1;" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;Regras do Bloco 2&lt;br&gt;&lt;font style=&quot;&quot;&gt;Limite financeiro&lt;/font&gt;&lt;/font&gt;" vertex="1">
           <mxGeometry height="75" width="205" x="275" y="55" as="geometry" />
         </mxCell>
-        <mxCell id="b3" parent="business" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=14;fontStyle=1;" value="Regras do Bloco 3&lt;br&gt;&lt;font style=&quot;font-size: 12px&quot;&gt;Limite por conhecimento e experiência&lt;/font&gt;" vertex="1">
+        <mxCell id="b3" parent="business" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=17;fontStyle=1;" value="Regras do Bloco 3&lt;br&gt;&lt;font&gt;Limite por conhecimento e experiência&lt;/font&gt;" vertex="1">
           <mxGeometry height="75" width="205" x="510" y="55" as="geometry" />
         </mxCell>
-        <mxCell id="consolidation" parent="business" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFDF5;strokeColor=#B36B00;fontSize=14;fontStyle=1;" value="Consolidação do perfil&lt;br&gt;&lt;font style=&quot;font-size: 12px&quot;&gt;Compara perfil preliminar e limites aplicados&lt;/font&gt;" vertex="1">
+        <mxCell id="consolidation" parent="business" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFDF5;strokeColor=#B36B00;fontSize=17;fontStyle=1;" value="Consolidação do perfil&lt;br&gt;&lt;font&gt;Compara perfil preliminar e limites aplicados&lt;/font&gt;" vertex="1">
           <mxGeometry height="75" width="195" x="745" y="55" as="geometry" />
         </mxCell>
-        <mxCell id="e7" edge="1" parent="business" source="b1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=11;" target="consolidation" value="perfil preliminar">
+        <mxCell id="e7" edge="1" parent="business" source="b1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=16;" target="consolidation" value="perfil preliminar">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="142" y="165" />
@@ -58,7 +62,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e8" edge="1" parent="business" source="b2" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=11;" target="consolidation" value="limite financeiro">
+        <mxCell id="e8" edge="1" parent="business" source="b2" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=16;" target="consolidation" value="limite financeiro">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="377" y="150" />
@@ -66,40 +70,50 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e9" edge="1" parent="business" source="b3" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=11;" target="consolidation" value="limite de conhecimento">
-          <mxGeometry relative="1" y="38" as="geometry">
-            <mxPoint y="1" as="offset" />
+        <mxCell id="e9" edge="1" parent="business" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=16;" value="limite de conhecimento">
+          <mxGeometry relative="1" x="0.6667" y="20" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="715" y="65" as="sourcePoint" />
+            <mxPoint x="745" y="65" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="output" parent="1" style="swimlane;html=1;rounded=1;startSize=30;horizontal=1;fillColor=#FBEAF2;strokeColor=#A64D79;fontStyle=1;fontSize=14;" value="CAMADA DE SAÍDA" vertex="1">
-          <mxGeometry height="160" width="700" x="230" y="745" as="geometry" />
+        <mxCell id="output" parent="1" style="swimlane;html=1;rounded=1;startSize=30;horizontal=1;fillColor=#FBEAF2;strokeColor=#A64D79;fontStyle=1;fontSize=20;" value="CAMADA DE SAÍDA" vertex="1">
+          <mxGeometry height="160" width="700" x="230" y="700" as="geometry" />
         </mxCell>
-        <mxCell id="justification" parent="output" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A64D79;fontSize=14;fontStyle=1;" value="Geração da justificativa&lt;br&gt;&lt;font style=&quot;font-size: 12px&quot;&gt;Relaciona regras, limites e fatores predominantes&lt;/font&gt;" vertex="1">
+        <mxCell id="justification" parent="output" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A64D79;fontSize=20;fontStyle=1;" value="Geração da justificativa&lt;br&gt;&lt;font&gt;Relaciona regras, limites e fatores predominantes&lt;/font&gt;" vertex="1">
           <mxGeometry height="80" width="260" x="50" y="50" as="geometry" />
         </mxCell>
-        <mxCell id="result" parent="output" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A64D79;fontSize=14;fontStyle=1;" value="Apresentação do resultado&lt;br&gt;&lt;font style=&quot;font-size: 12px&quot;&gt;Perfil final e explicação ao usuário&lt;/font&gt;" vertex="1">
+        <mxCell id="result" parent="output" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#A64D79;fontSize=20;fontStyle=1;" value="Apresentação do resultado&lt;br&gt;&lt;font&gt;Perfil final e explicação ao usuário&lt;/font&gt;" vertex="1">
           <mxGeometry height="80" width="260" x="390" y="50" as="geometry" />
         </mxCell>
-        <mxCell id="e11" edge="1" parent="output" source="justification" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=11;" target="result" value="texto explicativo">
-          <mxGeometry relative="1" y="15" as="geometry">
+        <mxCell id="e11" edge="1" parent="output" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=16;labelBackgroundColor=none;" value="texto explicativo">
+          <mxGeometry relative="1" y="-20" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="310" y="115" as="sourcePoint" />
+            <mxPoint x="390" y="115" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="ui" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=16;labelBackgroundColor=default;" target="questions" value="solicita e exibe dados">
+          <mxGeometry relative="1" x="-0.1379" y="-11" as="geometry">
+            <mxPoint y="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="validation" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=16;" target="b1" value="P1–P3">
+          <mxGeometry relative="1" x="0.0905" y="-16" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e1" edge="1" parent="1" source="ui" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=11;" target="questions" value="solicita e exibe dados">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="e4" edge="1" parent="1" source="validation" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=11;" target="b1" value="P1–P3">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="e5" edge="1" parent="1" source="validation" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=11;" target="b2" value="P4–P6 + complementares">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="e6" edge="1" parent="1" source="validation" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=11;" target="b3" value="P7–P9 + complementares">
-          <mxGeometry relative="1" x="-0.4358" y="40" as="geometry">
+        <mxCell id="e5" edge="1" parent="1" source="validation" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=16;" target="b2" value="P4–P6 + complementares">
+          <mxGeometry relative="1" x="-0.2625" y="2" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e10" edge="1" parent="1" source="consolidation" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=11;" target="justification" value="perfil final + fatores">
+        <mxCell id="e6" edge="1" parent="1" source="validation" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=16;" target="b3" value="P7–P9 + complementares">
+          <mxGeometry relative="1" x="-0.9898" y="41" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="consolidation" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=16;" target="justification" value="perfil final + fatores">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>

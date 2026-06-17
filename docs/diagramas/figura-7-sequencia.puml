@@ -1,7 +1,9 @@
 @startuml
-Diagrama de sequência da classificação do perfil
-
+title Diagrama de sequência da classificação do perfil
 autonumber
+
+skinparam TitleFontSize 60
+skinparam DefaultFontSize 40
 
 actor Usuário as U
 boundary "Interface" as I
@@ -63,5 +65,4 @@ I -> J: Gerar justificativa textual
 J --> I: Justificativa do resultado
 
 I --> U: Exibir perfil final e justificativa
-
 @enduml

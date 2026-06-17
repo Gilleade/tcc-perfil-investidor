@@ -1,37 +1,37 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Figura 4 - Diagrama de atividade" id="0">
-    <mxGraphModel dx="2357" dy="1238" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="1471" dy="753" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=18;fontStyle=1" value="Diagrama de atividade do processo de classificação" vertex="1">
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=20;fontStyle=1" value="Diagrama de atividade do processo de classificação" vertex="1">
           <mxGeometry height="40" width="700" x="250" y="20" as="geometry" />
         </mxCell>
-        <mxCell id="lane_user" parent="1" style="swimlane;horizontal=1;startSize=35;rounded=0;html=1;fillColor=#EAF2F8;strokeColor=#2F5597;fontStyle=1;fontSize=14;" value="Usuário" vertex="1">
+        <mxCell id="lane_user" parent="1" style="swimlane;horizontal=1;startSize=35;rounded=0;html=1;fillColor=#EAF2F8;strokeColor=#2F5597;fontStyle=1;fontSize=20;" value="Usuário" vertex="1">
           <mxGeometry height="1560" width="450" x="90" y="90" as="geometry" />
         </mxCell>
         <mxCell id="start" parent="lane_user" style="ellipse;html=1;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
           <mxGeometry height="24" width="24" x="200" y="60" as="geometry" />
         </mxCell>
-        <mxCell id="access" parent="lane_user" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2F5597;fontSize=14;" value="Acessar o protótipo" vertex="1">
+        <mxCell id="access" parent="lane_user" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2F5597;fontSize=20;" value="Acessar o protótipo" vertex="1">
           <mxGeometry height="65" width="230" x="97" y="50" as="geometry" />
         </mxCell>
-        <mxCell id="answer_b1" parent="lane_user" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2F5597;fontSize=14;" value="Responder P1, P2 e P3" vertex="1">
+        <mxCell id="answer_b1" parent="lane_user" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2F5597;fontSize=20;" value="Responder P1, P2 e P3" vertex="1">
           <mxGeometry height="65" width="230" x="100" y="140" as="geometry" />
         </mxCell>
-        <mxCell id="answer_b2" parent="lane_user" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2F5597;fontSize=14;" value="Responder P4, P5 e P6" vertex="1">
+        <mxCell id="answer_b2" parent="lane_user" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2F5597;fontSize=20;" value="Responder P4, P5 e P6" vertex="1">
           <mxGeometry height="65" width="230" x="110" y="470" as="geometry" />
         </mxCell>
-        <mxCell id="answer_sub2" parent="lane_user" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFDF5;strokeColor=#B36B00;fontSize=13;" value="Responder subpergunta(s) financeira(s)" vertex="1">
+        <mxCell id="answer_sub2" parent="lane_user" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFDF5;strokeColor=#B36B00;fontSize=20;" value="Responder subpergunta(s) financeira(s)" vertex="1">
           <mxGeometry height="75" width="270" x="90" y="730" as="geometry" />
         </mxCell>
-        <mxCell id="answer_b3" parent="lane_user" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2F5597;fontSize=14;" value="Responder P7, P8 e P9" vertex="1">
+        <mxCell id="answer_b3" parent="lane_user" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2F5597;fontSize=20;" value="Responder P7, P8 e P9" vertex="1">
           <mxGeometry height="65" width="230" x="110" y="890" as="geometry" />
         </mxCell>
-        <mxCell id="answer_sub3" parent="lane_user" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFDF5;strokeColor=#B36B00;fontSize=13;" value="Responder subpergunta(s) de conhecimento e experiência" vertex="1">
+        <mxCell id="answer_sub3" parent="lane_user" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFDF5;strokeColor=#B36B00;fontSize=13;" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;Responder subpergunta(s) de conhecimento e experiência&lt;/font&gt;" vertex="1">
           <mxGeometry height="85" width="310" x="57" y="1151" as="geometry" />
         </mxCell>
-        <mxCell id="show_result" parent="lane_user" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2F5597;fontSize=14;" value="Exibir perfil final e justificativa" vertex="1">
+        <mxCell id="show_result" parent="lane_user" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2F5597;fontSize=20;" value="Exibir perfil final e justificativa" vertex="1">
           <mxGeometry height="70" width="270" x="80" y="1400" as="geometry" />
         </mxCell>
         <mxCell id="end_outer" parent="lane_user" style="ellipse;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;" value="" vertex="1">
@@ -43,64 +43,64 @@
         <mxCell id="e26" edge="1" parent="lane_user" source="show_result" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;" target="end_outer">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="lane_system" parent="1" style="swimlane;horizontal=1;startSize=35;rounded=0;html=1;fillColor=#EAF7EA;strokeColor=#38761D;fontStyle=1;fontSize=14;" value="Sistema" vertex="1">
+        <mxCell id="lane_system" parent="1" style="swimlane;horizontal=1;startSize=35;rounded=0;html=1;fillColor=#EAF7EA;strokeColor=#38761D;fontStyle=1;fontSize=20;" value="Sistema" vertex="1">
           <mxGeometry height="1560" width="550" x="540" y="90" as="geometry" />
         </mxCell>
-        <mxCell id="show_b1" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=14;" value="Apresentar Bloco 1" vertex="1">
+        <mxCell id="show_b1" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=20;" value="Apresentar Bloco 1" vertex="1">
           <mxGeometry height="65" width="250" x="150" y="50" as="geometry" />
         </mxCell>
-        <mxCell id="validate_b1" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=14;" value="Validar respostas do Bloco 1" vertex="1">
+        <mxCell id="validate_b1" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=20;" value="Validar respostas do Bloco 1" vertex="1">
           <mxGeometry height="65" width="250" x="150" y="150" as="geometry" />
         </mxCell>
-        <mxCell id="decision_b1" parent="lane_system" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF7E6;strokeColor=#B36B00;fontSize=13;" value="Respostas válidas?" vertex="1">
+        <mxCell id="decision_b1" parent="lane_system" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF7E6;strokeColor=#B36B00;fontSize=20;" value="Respostas válidas?" vertex="1">
           <mxGeometry height="105" width="180" x="185" y="240" as="geometry" />
         </mxCell>
-        <mxCell id="warn_b1" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2F2;strokeColor=#B85450;fontSize=13;" value="Informar pendência de preenchimento" vertex="1">
+        <mxCell id="warn_b1" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2F2;strokeColor=#B85450;fontSize=20;" value="Informar pendência de preenchimento" vertex="1">
           <mxGeometry height="70" width="240" x="15" y="360" as="geometry" />
         </mxCell>
-        <mxCell id="calc_prelim" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=14;" value="Calcular perfil preliminar" vertex="1">
+        <mxCell id="calc_prelim" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=20;" value="Calcular perfil preliminar" vertex="1">
           <mxGeometry height="70" width="240" x="270" y="360" as="geometry" />
         </mxCell>
-        <mxCell id="show_b2" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=14;" value="Apresentar Bloco 2" vertex="1">
+        <mxCell id="show_b2" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=20;" value="Apresentar Bloco 2" vertex="1">
           <mxGeometry height="65" width="250" x="130" y="470" as="geometry" />
         </mxCell>
-        <mxCell id="check_trigger3" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=14;" value="Verificar gatilhos de conhecimento e experiência" vertex="1">
+        <mxCell id="check_trigger3" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=20;" value="Verificar gatilhos de conhecimento e experiência" vertex="1">
           <mxGeometry height="75" width="280" x="115" y="990" as="geometry" />
         </mxCell>
-        <mxCell id="check_trigger2" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=14;" value="Verificar gatilhos financeiros" vertex="1">
+        <mxCell id="check_trigger2" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=14;" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;Verificar gatilhos financeiros&lt;/font&gt;" vertex="1">
           <mxGeometry height="65" width="250" x="130" y="550" as="geometry" />
         </mxCell>
-        <mxCell id="decision_trigger2" parent="lane_system" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF7E6;strokeColor=#B36B00;fontSize=13;" value="Há subpergunta?" vertex="1">
+        <mxCell id="decision_trigger2" parent="lane_system" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF7E6;strokeColor=#B36B00;fontSize=20;" value="Há subpergunta?" vertex="1">
           <mxGeometry height="105" width="180" x="165" y="645" as="geometry" />
         </mxCell>
-        <mxCell id="apply_limit2" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=14;" value="Definir limite financeiro" vertex="1">
+        <mxCell id="apply_limit2" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=14;" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;Definir limite financeiro&lt;/font&gt;" vertex="1">
           <mxGeometry height="75" width="240" x="270" y="785" as="geometry" />
         </mxCell>
-        <mxCell id="show_b3" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=14;" value="Apresentar Bloco 3" vertex="1">
+        <mxCell id="show_b3" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=20;" value="Apresentar Bloco 3" vertex="1">
           <mxGeometry height="65" width="250" x="130" y="895" as="geometry" />
         </mxCell>
         <mxCell id="e12" edge="1" parent="lane_system" source="check_trigger2" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;" target="decision_trigger2">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e14" edge="1" parent="lane_system" source="decision_trigger2" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=12;" target="apply_limit2" value="Não">
+        <mxCell id="e14" edge="1" parent="lane_system" source="decision_trigger2" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=20;" target="apply_limit2" value="Não">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e16" edge="1" parent="lane_system" source="apply_limit2" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;" target="show_b3">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="decision_trigger3" parent="lane_system" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF7E6;strokeColor=#B36B00;fontSize=13;" value="Há subpergunta?" vertex="1">
+        <mxCell id="decision_trigger3" parent="lane_system" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF7E6;strokeColor=#B36B00;fontSize=20;" value="Há subpergunta?" vertex="1">
           <mxGeometry height="105" width="180" x="165" y="1110" as="geometry" />
         </mxCell>
-        <mxCell id="apply_limit3" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=14;" value="Definir limite por conhecimento e experiência" vertex="1">
+        <mxCell id="apply_limit3" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#38761D;fontSize=20;" value="Definir limite por conhecimento e experiência" vertex="1">
           <mxGeometry height="85" width="270" x="245" y="1250" as="geometry" />
         </mxCell>
-        <mxCell id="consolidate" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE4EC;strokeColor=#A64D79;fontSize=14;fontStyle=1;" value="Consolidar perfil final" vertex="1">
+        <mxCell id="consolidate" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE4EC;strokeColor=#A64D79;fontSize=20;fontStyle=1;" value="Consolidar perfil final" vertex="1">
           <mxGeometry height="70" width="250" x="130" y="1380" as="geometry" />
         </mxCell>
-        <mxCell id="justify" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE4EC;strokeColor=#A64D79;fontSize=14;fontStyle=1;" value="Gerar justificativa textual" vertex="1">
+        <mxCell id="justify" parent="lane_system" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE4EC;strokeColor=#A64D79;fontSize=20;fontStyle=1;" value="Gerar justificativa textual" vertex="1">
           <mxGeometry height="70" width="250" x="130" y="1480" as="geometry" />
         </mxCell>
-        <mxCell id="e21" edge="1" parent="lane_system" source="decision_trigger3" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=12;" target="apply_limit3" value="Não">
+        <mxCell id="e21" edge="1" parent="lane_system" source="decision_trigger3" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=20;" target="apply_limit3" value="Não">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e23" edge="1" parent="lane_system" source="apply_limit3" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;" target="consolidate">
@@ -124,7 +124,7 @@
         <mxCell id="e5" edge="1" parent="1" source="validate_b1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;" target="decision_b1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e6" edge="1" parent="1" source="decision_b1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#B85450;fontSize=12;" target="warn_b1" value="Não">
+        <mxCell id="e6" edge="1" parent="1" source="decision_b1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#B85450;fontSize=20;" target="warn_b1" value="Não">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e7" edge="1" parent="1" source="warn_b1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#B85450;edgeStyle=orthogonalEdgeStyle;" target="answer_b1">
@@ -134,7 +134,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e8" edge="1" parent="1" source="decision_b1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=12;" target="calc_prelim" value="Sim">
+        <mxCell id="e8" edge="1" parent="1" source="decision_b1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=20;" target="calc_prelim" value="Sim">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e9" edge="1" parent="1" source="calc_prelim" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;" target="show_b2">
@@ -146,7 +146,7 @@
         <mxCell id="e11" edge="1" parent="1" source="answer_b2" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;" target="check_trigger2">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e13" edge="1" parent="1" source="decision_trigger2" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=12;" target="answer_sub2" value="Sim">
+        <mxCell id="e13" edge="1" parent="1" source="decision_trigger2" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=20;" target="answer_sub2" value="Sim">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e15" edge="1" parent="1" source="answer_sub2" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;" target="apply_limit2">
@@ -161,7 +161,7 @@
         <mxCell id="e19" edge="1" parent="1" source="check_trigger3" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;" target="decision_trigger3">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e20" edge="1" parent="1" source="decision_trigger3" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=12;" target="answer_sub3" value="Sim">
+        <mxCell id="e20" edge="1" parent="1" source="decision_trigger3" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;fontSize=20;" target="answer_sub3" value="Sim">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e22" edge="1" parent="1" source="answer_sub3" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;" target="apply_limit3">
